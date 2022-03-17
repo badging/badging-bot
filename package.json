@@ -5,7 +5,6 @@
   "description": "A github app that automates some of the review processes for CHAOSS DEI Badging applications",
   "author": "Aastha Bist <abist119@gmail.com>",
   "license": "ISC",
-  "type": "module",
   "repository": "https://github.com/badging/badging-bot.git",
   "homepage": "https://github.com/badging/badging-bot",
   "bugs": "https://github.com/badging/badging-bot/issues",
@@ -15,42 +14,22 @@
     "probot-app"
   ],
   "scripts": {
-    "dev": "nodemon",
-    "start": "probot run ./index.js",
-    "lint": "standard --fix",
-    "test": "jest && standard",
-    "test:watch": "jest --watch --notify --notifyMode=change --coverage"
+    "start": "node starter.js",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "axios": "^0.26.1",
-    "beautify": "0.0.8",
-    "fs": "0.0.1-security",
-    "probot": "^9.15.1",
-    "probot-commands": "^1.1.0"
+    "body-parser": "^1.19.2",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.3",
+    "localtunnel": "^2.0.2",
+    "smee-client": "^1.2.2"
   },
   "devDependencies": {
-    "jest": "^26.1.0",
-    "nock": "^12.0.3",
-    "nodemon": "^2.0.4",
-    "smee-client": "^1.1.0",
-    "standard": "^14.3.4"
+    "ngrok": "^4.3.1",
+    "nodemon": "^2.0.15"
   },
   "engines": {
     "node": ">= 8.3.0"
-  },
-  "standard": {
-    "env": [
-      "jest"
-    ]
-  },
-  "nodemonConfig": {
-    "exec": "npm start",
-    "watch": [
-      ".env",
-      "."
-    ]
-  },
-  "jest": {
-    "testEnvironment": "node"
   }
 }
