@@ -2,6 +2,7 @@ const bodyParser = require("body-parser");
 const { parsed: envs } = require("dotenv").config();
 const express = require("express");
 const SmeeClient = require("smee-client");
+const bot = require("./index-one");
 
 // create instances
 const app = express();
@@ -13,8 +14,9 @@ app.use(router);
 
 // receive webhook responses from repo
 router.post("/", async (req, res) => {
-  const results = await req.body;
-  console.log(results);
+  const data = await req.body;
+  bot(data)
+  console.log(data);
 });
 
 // setup local server
