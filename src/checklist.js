@@ -1,14 +1,14 @@
 const axios = require("axios");
-const { parsed: envs } = require("dotenv").config();
-const {applicantWelcome} = require('../content.json')
+const {reviewerWelcome,checklistVirtual} = require("../content.json")
 
+const issuechecklist = async(results) => {
+    const reviewerMessage = '@'+results.assignee.login +' ' + reviewerWelcome + checklistVirtual
 
-const getContent = async (results) => {
-  await axios
+    await axios
     .post(
       `${process.env.REPO_API_URL}/issues/${results.issue.number}/comments`,
       {
-        body: applicantWelcome,
+        body: reviewerMessage,
       },
       {
         headers: {
@@ -20,6 +20,6 @@ const getContent = async (results) => {
     )
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
-};
+}
 
-module.exports = { getContent };
+module.exports = issuechecklist;
