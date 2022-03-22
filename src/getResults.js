@@ -1,14 +1,20 @@
-const axios = require("axios");
-const { parsed: envs } = require("dotenv").config();
-const {applicantWelcome} = require('../content.json')
+const calculateBadge = require("./calculate.badge");
+const getResults = async results => {
+  const message = await calculateBadge(results).then(res=>{
+    "\nReview percentage: " +
+    res[2] +
+    "\n" +
+    "\nNumber of reviewers: " +
+    res[3] +
+    "\n";
+  })
+    
 
-
-const welcome = async (results) => {
-  await axios
+  return await axios
     .post(
       `${process.env.REPO_API_URL}/issues/${results.issue.number}/comments`,
       {
-        body: applicantWelcome,
+        body: reviewDetails[0]+message,
       },
       {
         headers: {
@@ -20,6 +26,6 @@ const welcome = async (results) => {
     )
     .then((res) => console.log(res))
     .catch((err) => console.log(err));
-};
+}
 
-module.exports = welcome
+module.exports = getResults;

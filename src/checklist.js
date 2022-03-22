@@ -1,7 +1,7 @@
 const axios = require("axios");
 const {reviewerWelcome,checklistVirtual} = require("../content.json")
 
-const issuechecklist = async(results) => {
+const checklist = async(results) => {
     const reviewerMessage = '@'+results.assignee.login +' ' + reviewerWelcome + checklistVirtual
 
     await axios
@@ -22,4 +22,4 @@ const issuechecklist = async(results) => {
     .catch((err) => console.log(err));
 }
 
-module.exports = issuechecklist;
+module.exports = checklist;

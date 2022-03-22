@@ -2,7 +2,7 @@ const bodyParser = require("body-parser");
 const { parsed: envs } = require("dotenv").config();
 const express = require("express");
 const SmeeClient = require("smee-client");
-const bot = require("./index-one");
+const bot = require("./index");
 
 // create instances
 const app = express();
@@ -18,6 +18,7 @@ router.post("/", async (req, res) => {
   bot(data)
   console.log(data);
 });
+
 
 // setup local server
 app.listen(process.env.PORT, () => {

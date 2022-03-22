@@ -14,9 +14,8 @@
     "probot-app"
   ],
   "scripts": {
-    "start": "node starter.js",
-    "dev": "nodemon server.js",
-    "test": "nodemon content.js"
+    "generate-content": "node content.js",
+    "dev": "npm run generate-content && nodemon server.js"
   },
   "dependencies": {
     "axios": "^0.26.1",

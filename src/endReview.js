@@ -1,25 +1,85 @@
-const calculateBadge = require("./calculateBadge");
+const calculateBadge = require("./calculate.badge");
 const checkModerator = require("./checkModerator");
+const axios = require("axios");
 
-async function endReview(context) {
-  let reviewDetails = await calculateBadge(context);
-  if ((await checkModerator(context)) == true)
-    context.github.issues.update(context.issue({ state: "closed" }));
-
-  context.github.issues.removeLabel(context.issue({ name: ["review-begin"] }));
-  context.github.issues.addLabels(context.issue({ labels: ["review-end"] }));
-
-  const message =
+const endReview = async results => {
+  let message = await calculateBadge(results).then(res => {
     "\n**Markdown Badge Link:**\n```\n" +
-    reviewDetails[0] +
+    res[0] +
     "\n```" +
     "\n**HTML Badge Link:**\n```\n" +
-    reviewDetails[1] +
+    res[1] +
     "\n```";
+  })
+  if ((await checkModerator(results)) == true){
+    await axios
+    .patch(
+      `&{process.env.REPO_API_URL}/issues/${results.issue.number}`,
+      {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_TOKEN}`,
+          Accept: "application/vnd.github.v3+json",
+          "content-type": "application/json",
+        },
+        state: "closed"
+      }
+    )
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => console.log(err));
+  }
 
-  return context.github.issues.createComment(
-    context.issue({ body: reviewDetails[0] + message })
-  );
+  await axios
+    .delete(
+      `&{process.env.REPO_API_URL}/issues/${results.issue.number}/labels/review-begin`,
+      {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_TOKEN}`,
+          Accept: "application/vnd.github.v3+json",
+          "content-type": "application/json",
+        }
+      }
+    )
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => console.log(err));
+
+    await axios
+    .post(
+      `&{process.env.REPO_API_URL}/issues/${results.issue.number}/labels`,
+      {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_TOKEN}`,
+          Accept: "application/vnd.github.v3+json",
+          "content-type": "application/json",
+        },
+        body: ["review-end"]
+      }
+    )
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => console.log(err));
+
+
+  return await axios
+    .post(
+      `${process.env.REPO_API_URL}/issues/${results.issue.number}/comments`,
+      {
+        body: reviewDetails[0] + message,
+      },
+      {
+        headers: {
+          Authorization: `token ${process.env.GITHUB_TOKEN}`,
+          Accept: "application/vnd.github.v3+json",
+          "content-type": "application/json",
+        },
+      }
+    )
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
 }
 
 module.exports = endReview;

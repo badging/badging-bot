@@ -1,27 +1,34 @@
-const postWelcome = require("./src/postWelcome");
-const postChecklist = require("./src/postChecklist");
-const commandResponse = require("./src/commandResponse");
-const endReview = require("./src/endReview");
-const commands = require("probot-commands");
-const postHelp = require("./src/postHelp");
-const assignReviewers = require("./src/assignReviewers");
+const {getResults,help,endReview,welcome} = require("./src")
 
-module.exports = app => {
-  //app.on("issues.opened", postWelcome);
-  //app.on("issues.opened", assignReviewers);
-  app.on("issues.opened", async (context) => {
-    if (context.payload.issue.title.includes("[Virtual Event]") || context.payload.issue.title.includes("[In-Person Event]")) {
-      postWelcome(context);
-      //assignReviewers(context);
+const bot = (results) => {
+  // welcome note
+  if (
+    (results.action === "opened" &&
+      results.issue.title.includes("[Virtual Event]")) ||
+    results.issue.title.includes("[In-Person Event]")
+  ) {
+    welcome(results);
+  }
+
+  if (
+    (results.action === "assigned" &&
+      results.issue.title.includes("[Virtual Event]")) ||
+    results.issue.title.includes("[In-Person Event]")
+  ) {
+    checklist(results);
+  }
+
+  if (results.action === "created") {
+    if (results.comment.body.includes("/result")) {
+      getResults(results);
     }
-  });
-  app.on("issues.assigned", async (context) => {
-    if (context.payload.issue.title.includes("[Virtual Event]") || context.payload.issue.title.includes("[In-Person Event]")) {
-      postChecklist(context);
+    if (results.comment.body.includes("/end")) {
+      endReview(results);
     }
-  });
-  //app.on("issues.assigned", postChecklist);
-  commands(app, "result", commandResponse);
-  commands(app, "end", endReview);
-  commands(app, "help", postHelp);
+    if (results.comment.body.includes("/help")) {
+      help(results);
+    }
+  }
 };
+
+module.exports = bot;

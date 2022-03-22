@@ -16,10 +16,6 @@ const content = async() => {
     .then(res => {
         res.data.forEach(async(item)=>{
             counter++;
-            // if(counter === res.data[res.data.length]-1){
-                
-                //     console.log(contentFile)
-                // }
                 await axios.get(url+item.name,{
                     headers: {
                     Authorization: `token ${process.env.GITHUB_TOKEN}`,
