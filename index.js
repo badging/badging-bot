@@ -1,34 +1,34 @@
-const {getResults,help,endReview,welcome} = require("./src")
+const bodyParser = require("body-parser");
+const { parsed: envs } = require("dotenv").config();
+const express = require("express");
+const SmeeClient = require("smee-client");
+const bot = require("./bot");
 
-const bot = (results) => {
-  // welcome note
-  if (
-    (results.action === "opened" &&
-      results.issue.title.includes("[Virtual Event]")) ||
-    results.issue.title.includes("[In-Person Event]")
-  ) {
-    welcome(results);
-  }
+// create instances
+const app = express();
+var router = express.Router();
 
-  if (
-    (results.action === "assigned" &&
-      results.issue.title.includes("[Virtual Event]")) ||
-    results.issue.title.includes("[In-Person Event]")
-  ) {
-    checklist(results);
-  }
+// middlewares
+app.use(bodyParser.json());
+app.use(router);
 
-  if (results.action === "created") {
-    if (results.comment.body.includes("/result")) {
-      getResults(results);
-    }
-    if (results.comment.body.includes("/end")) {
-      endReview(results);
-    }
-    if (results.comment.body.includes("/help")) {
-      help(results);
-    }
-  }
-};
+// receive webhook responses from repo
+router.post("/", async (req, res) => {
+  const data = await req.body;
+  bot(data)
+  console.log(data);
+});
 
-module.exports = bot;
+
+// setup local server
+app.listen(process.env.PORT, () => {
+  console.log(`Server Running on Port ${process.env.PORT}`);
+});
+
+//connect local server to network client
+const smee = new SmeeClient({
+  source: "https://smee.io/badging",
+  target: `http://localhost:${process.env.PORT}/`,
+  logger: console,
+});
+smee.start();

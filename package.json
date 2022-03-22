@@ -8,14 +8,9 @@
   "repository": "https://github.com/badging/badging-bot.git",
   "homepage": "https://github.com/badging/badging-bot",
   "bugs": "https://github.com/badging/badging-bot/issues",
-  "keywords": [
-    "probot",
-    "github",
-    "probot-app"
-  ],
   "scripts": {
     "generate-content": "node content.js",
-    "dev": "npm run generate-content && nodemon server.js"
+    "dev": "npm run generate-content && nodemon index.js"
   },
   "dependencies": {
     "axios": "^0.26.1",
