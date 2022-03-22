@@ -1,4 +1,5 @@
 const {getContent} = require('./src/welcome');
+const help = require('./src/help');
 const checklist = require('./src/checklist')
 
 const bot = results => {
@@ -14,6 +15,18 @@ const bot = results => {
 
 
       }
+
+    if(results.action === 'created') {
+        if(results.comment.body.includes('/result')) {
+            getResults(results);
+        }
+        if(results.comment.body.includes('/end')) {
+          endReview(results);
+      }
+      if(results.comment.body.includes('/help')) {
+        help(results);
+    }
+    }
 }
 
 module.exports = bot;
