@@ -1,2 +1,0 @@
-- bot should trigger and issue to test welcome feature and delete it after sometime;
-- have environmental variables for everything
