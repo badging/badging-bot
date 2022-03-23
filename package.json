@@ -10,7 +10,8 @@
   "bugs": "https://github.com/badging/badging-bot/issues",
   "scripts": {
     "generate-content": "node content.js",
-    "dev": "npm run generate-content && nodemon index.js"
+    "dev": "npm run generate-content && nodemon index.js",
+    "test": "nodemon ./src/calculate.badge.js"
   },
   "dependencies": {
     "axios": "^0.26.1",

@@ -1,4 +1,4 @@
-const { getResults, help, endReview, welcome } = require("./src");
+const { getResults, help, endReview, welcome, checklist } = require("./src");
 
 const bot = (results) => {
   switch (results.action) {
@@ -18,6 +18,7 @@ const bot = (results) => {
       ) {
         checklist(results);
       }
+      break;
 
     case "created":
       if (results.comment.body.includes("/result")) {

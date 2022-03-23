@@ -1,20 +1,20 @@
 const calculateBadge = require("./calculate.badge");
+const axios = require("axios");
 const getResults = async results => {
-  const message = await calculateBadge(results).then(res=>{
-    "\nReview percentage: " +
-    res[2] +
-    "\n" +
-    "\nNumber of reviewers: " +
-    res[3] +
-    "\n";
-  })
+  const resultsArray = calculateBadge(results)
+  const message = "\nReview percentage: " +
+  resultsArray[2] +
+  "\n" +
+  "\nNumber of reviewers: " +
+  resultsArray[3] +
+  "\n";
     
 
   return await axios
     .post(
       `${process.env.REPO_API_URL}/issues/${results.issue.number}/comments`,
       {
-        body: reviewDetails[0]+message,
+        body: resultsArray[0]+message,
       },
       {
         headers: {

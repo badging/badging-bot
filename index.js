@@ -16,7 +16,6 @@ app.use(router);
 router.post("/", async (req, res) => {
   const data = await req.body;
   bot(data)
-  console.log(data);
 });
 
 
