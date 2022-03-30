@@ -12,21 +12,21 @@ const endReview = async (results) => {
     resultsObj.htmlBadgeImage +
     "\n```";
 
-  if ((await checkModerator(results)) == true) {
-    await axios
-      .patch(`&{process.env.REPO_API_URL}/issues/${results.issue.number}`, {
-        headers: {
-          Authorization: `token ${process.env.GITHUB_TOKEN}`,
-          Accept: "application/vnd.github.v3+json",
-          "content-type": "application/json",
-        },
-        state: "closed",
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => console.log(err));
-  }
+  // if ((await checkModerator(results)) == true) {
+  //   await axios
+  //     .patch(`&{process.env.REPO_API_URL}/issues/${results.issue.number}`, {
+  //       headers: {
+  //         Authorization: `token ${process.env.GITHUB_TOKEN}`,
+  //         Accept: "application/vnd.github.v3+json",
+  //         "content-type": "application/json",
+  //       },
+  //       state: "closed",
+  //     })
+  //     .then((res) => {
+  //       console.log(res.data);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
 
   await axios
     .delete(
@@ -58,7 +58,7 @@ const endReview = async (results) => {
     })
     .catch((err) => console.log(err));
 
-  return await axios
+  await axios
     .post(
       `${process.env.REPO_API_URL}/issues/${results.issue.number}/comments`,
       {

@@ -1,4 +1,4 @@
-const { getResults, help, endReview, welcome, checklist } = require("./src");
+const { getResults, help, endReview, welcome, assignChecklist } = require("./src");
 
 const bot = (results) => {
   switch (results.action) {
@@ -16,7 +16,7 @@ const bot = (results) => {
         results.issue.title.includes("[Virtual Event]") ||
         results.issue.title.includes("[In-Person Event]")
       ) {
-        checklist(results);
+        assignChecklist(results);
       }
       break;
 
