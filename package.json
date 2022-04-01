@@ -1,13 +1,13 @@
 {
-  "name": "list-bot-test",
+  "name": "badging-bot",
   "version": "1.0.0",
   "private": true,
-  "description": "A Probot app",
+  "description": "A github app that automates some of the portions of the review process workflow for CHAOSS DEI Badging applications",
   "author": "Aastha Bist <abist119@gmail.com>",
   "license": "ISC",
-  "repository": "https://github.com/bistaastha/list-bot-test.git",
-  "homepage": "https://github.com/bistaastha/list-bot-test",
-  "bugs": "https://github.com/bistaastha/list-bot-test/issues",
+  "repository": "https://github.com/badging/badging-bot.git",
+  "homepage": "https://github.com/badging/badging-bot",
+  "bugs": "https://github.com/badging/badging-bot/issues",
   "keywords": [
     "probot",
     "github",
