@@ -2,22 +2,22 @@ function postChecklist(context) {
   const heading = `# Checklist for @${context.payload.assignee.login}`;
 
 
-  var fs2 = require('fs');
+  var fs = require('fs');
 
 
-  var reviewerWelcome = fs2.readFileSync("./.github/reviewer-welcome.md", "utf8")
+  var reviewerWelcome = fs.readFileSync("./.github/reviewer-welcome.md", "utf8")
 
 
   const title = context.payload.issue.title;
 
 
-  var checklist = fs2.readFileSync("./.github/checklist.md", "utf8")
+  var checklist = fs.readFileSync("./.github/checklist.md", "utf8")
 
 
 
   if (title.substring(0, 15) == "[Virtual Event]") {
 
-    checklist = fs2.readFileSync("./.github/checklist-virtual.md", "utf8")
+    checklist = fs.readFileSync("./.github/checklist-virtual.md", "utf8")
 
   }
 
