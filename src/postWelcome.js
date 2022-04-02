@@ -1,15 +1,12 @@
 async function postWelcome(context) {
-  const applicantWelcome = await context.github.repos.getContents(
-    context.repo({ path: ".github/applicant-welcome.md" })
-  );
 
-  const applicantMessage = Buffer.from(
-    applicantWelcome.data.content,
-    "base64"
-  ).toString();
+  var fs1 = require('fs');
+
+  var applicantWelcome = fs1.readFileSync("./.github/applicant-welcome.md", "utf8")
+
 
   context.github.issues.createComment(
-    context.issue({ body: applicantMessage })
+    context.issue({ body: applicantWelcome })
   );
 }
 
