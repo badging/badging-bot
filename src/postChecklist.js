@@ -4,17 +4,17 @@ function postChecklist(context) {
 
   var fs = require('fs');
 
-
+  // Welcome message for reviewers
   var reviewerWelcome = fs.readFileSync("./.github/reviewer-welcome.md", "utf8")
 
 
   const title = context.payload.issue.title;
 
-
+  // Review checklist
   var checklist = fs.readFileSync("./.github/checklist.md", "utf8")
 
 
-
+  // Review checklist for virtual events
   if (title.substring(0, 15) == "[Virtual Event]") {
 
     checklist = fs.readFileSync("./.github/checklist-virtual.md", "utf8")
