@@ -1,8 +1,8 @@
 async function postWelcome(context) {
 
-  var fs1 = require('fs');
+  var fs = require('fs');
 
-  var applicantWelcome = fs1.readFileSync("./.github/applicant-welcome.md", "utf8")
+  var applicantWelcome = fs.readFileSync("./.github/applicant-welcome.md", "utf8")
 
 
   context.github.issues.createComment(
