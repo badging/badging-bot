@@ -1,30 +1,32 @@
-async function postChecklist(context) {
+function postChecklist(context) {
   const heading = `# Checklist for @${context.payload.assignee.login}`;
 
-  const reviewerWelcome = await context.github.repos.getContents(
-    context.repo({ path: ".github/reviewer-welcome.md" })
-  );
+
+  var fs2 = require('fs');
+
+
+  var reviewerWelcome = fs2.readFileSync("./.github/reviewer-welcome.md", "utf8")
+
 
   const title = context.payload.issue.title;
 
-  let checklist = await context.github.repos.getContents(
-    context.repo({ path: ".github/checklist.md" })
-  );
+
+  var checklist = fs2.readFileSync("./.github/checklist.md", "utf8")
+
+
 
   if (title.substring(0, 15) == "[Virtual Event]") {
-    checklist = await context.github.repos.getContents(
-      context.repo({ path: ".github/checklist-virtual.md" })
-    );
+
+    checklist = fs2.readFileSync("./.github/checklist-virtual.md", "utf8")
+
   }
 
-  const reviewerMessage =
-    heading +
-    "\n" +
-    Buffer.from(reviewerWelcome.data.content, "base64").toString() +
-    Buffer.from(checklist.data.content, "base64").toString();
-  console.log(reviewerMessage);
+  // Final reviewer message
+  var reviewerMessage = heading + "\n" + reviewerWelcome + checklist;
 
-  context.github.issues.createComment(context.issue({ body: reviewerMessage }));
+  context.github.issues.createComment(
+    context.issue({ body: reviewerMessage })
+  );
 
   if (context.payload.issue.assignees.length == 2) {
     context.github.issues.addLabels(
