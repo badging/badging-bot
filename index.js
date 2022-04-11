@@ -24,10 +24,12 @@ app.listen(process.env.PORT, () => {
   console.log(`Server Running on Port ${process.env.PORT}`);
 });
 
-//connect local server to network client
-const smee = new SmeeClient({
-  source: "https://smee.io/badging",
-  target: `http://localhost:${process.env.PORT}/`,
-  logger: console,
-});
-smee.start();
+//connect local server to network client in development
+if(process.env.NODE_ENV !== 'production') {
+  const smee = new SmeeClient({
+    source: "https://smee.io/badging",
+    target: `http://localhost:${process.env.PORT}/`,
+    logger: console,
+  });
+  smee.start();
+}

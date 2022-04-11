@@ -11,17 +11,17 @@
   "scripts": {
     "generate-content": "node content.js",
     "dev": "npm run generate-content && nodemon index.js",
-    "test": "nodemon ./src/calculate.badge.js"
+    "start": "npm run generate-content && node index.js"
   },
   "dependencies": {
     "axios": "0.26.1",
     "body-parser": "1.19.2",
     "dotenv": "16.0.0",
-    "express": "4.17.3",
-    "smee-client": "1.2.2"
+    "express": "4.17.3"
   },
   "devDependencies": {
-    "nodemon": "2.0.15"
+    "nodemon": "2.0.15",
+    "smee-client": "1.2.2"
   },
   "engines": {
     "node": ">= 8.3.0"
