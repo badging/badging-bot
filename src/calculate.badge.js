@@ -5,16 +5,16 @@ let messageObj;
 
 const calculateBadge = async (results) => {
   let initialCheckCount = 6,
-    issueURL =
-      "https://api.github.com/repos/badging/event-diversity-and-inclusion/issues/139";
-  //results.repository.name === "event-diversity-and-inclusion"?initialCheckCount=4:initialCheckCount=6;
+    issueURL = `https://api.github.com/repos/${results.repository.full_name}/issues/${results.issue.number}`;
+    results.repository.name === "event-diversity-and-inclusion"?initialCheckCount=4:initialCheckCount;
 
+  
   await axios
     .get(
-      "https://api.github.com/repos/badging/event-diversity-and-inclusion/issues/139/comments",
+      `https://api.github.com/repos/${results.repository.full_name}/issues/${results.issue.number}/comments`,
       {
         headers: {
-          // Authorization: `token ${process.env.GITHUB_TOKEN}`,
+          Authorization: `token ${process.env.BOT_TOKEN}`,
           Accept: "application/vnd.github.v3+json",
           "content-type": "application/json",
         },

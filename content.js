@@ -8,7 +8,7 @@ const content = async() => {
     counter = 0;
     await axios.get(url, {
         headers: {
-            Authorization: `token ${process.env.GITHUB_TOKEN}`,
+            Authorization: `token ${process.env.BOT_TOKEN}`,
             Accept: "application/vnd.github.v3+json",
             "content-type": "application/json",
           },
@@ -18,7 +18,7 @@ const content = async() => {
             counter++;
                 await axios.get(url+item.name,{
                     headers: {
-                    Authorization: `token ${process.env.GITHUB_TOKEN}`,
+                    Authorization: `token ${process.env.BOT_TOKEN}`,
                     Accept: "application/vnd.github.v3+json",
                     "content-type": "application/json",
                 },
