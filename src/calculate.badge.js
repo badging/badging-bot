@@ -6,15 +6,16 @@ let messageObj;
 const calculateBadge = async (results) => {
   let initialCheckCount = 6,
     issueURL = `https://api.github.com/repos/${results.repository.full_name}/issues/${results.issue.number}`;
-    results.repository.name === "event-diversity-and-inclusion"?initialCheckCount=4:initialCheckCount;
+  results.repository.name === "event-diversity-and-inclusion"
+    ? (initialCheckCount = 4)
+    : initialCheckCount;
 
-  
   await axios
     .get(
       `https://api.github.com/repos/${results.repository.full_name}/issues/${results.issue.number}/comments`,
       {
         headers: {
-          Authorization: `token ${process.env.BOT_TOKEN}`,
+          Authorization: `token ${envs.BOT_TOKEN}`,
           Accept: "application/vnd.github.v3+json",
           "content-type": "application/json",
         },
@@ -95,7 +96,7 @@ const calculateBadge = async (results) => {
     })
     .catch((err) => console.log(err));
 
-   return messageObj;
+  return messageObj;
 };
 
 module.exports = calculateBadge;

@@ -1,4 +1,10 @@
-const { getResults, help, endReview, welcome, assignChecklist } = require("./src");
+const {
+  getResults,
+  help,
+  endReview,
+  welcome,
+  assignChecklist,
+} = require("./src");
 
 const bot = (results) => {
   switch (results.action) {
@@ -30,8 +36,8 @@ const bot = (results) => {
       if (results.comment.body.includes("/help")) {
         help(results);
       }
-      break
-      
+      break;
+
     default:
       break;
   }
