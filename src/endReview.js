@@ -1,5 +1,5 @@
 const calculateBadge = require("./calculate.badge");
-const checkModerator = require("./checkModerator");
+// const checkModerator = require("./checkModerator");
 const { addLabel, issueComment, removeLabel } = require("./routes");
 
 const endReview = async (results) => {
@@ -14,7 +14,7 @@ const endReview = async (results) => {
 
   /**********
    * add logic for bot closing issue if moderator is  in the list
-   * 
+   *
    * removed it because it was redundant
    */
 
