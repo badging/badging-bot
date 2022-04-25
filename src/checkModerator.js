@@ -1,7 +1,7 @@
 const { moderators } = require("../content.json");
 
-const checkModerator = async (results) => {
-  let moderatorUsername = results.issue.user.login;
+const checkModerator = async (payload) => {
+  let moderatorUsername = payload.issue.user.login;
   let moderatorList = moderators.split("\n");
 
   let list = moderatorList.filter((element) => {

@@ -1,8 +1,8 @@
 const { applicantWelcome } = require("../content.json");
 const { issueComment } = require("./routes");
 
-const welcome = async (results) => {
-  await issueComment(results, applicantWelcome);
+const welcome = async (payload) => {
+  await issueComment(payload, applicantWelcome);
 };
 
 module.exports = welcome;

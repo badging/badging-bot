@@ -9,10 +9,10 @@ const headers = {
 
 const routes = {
   //comment on issue
-  issueComment: (results, body) => {
+  issueComment: (payload, body) => {
     axios
       .post(
-        `https://api.github.com/repos/${results.repository.full_name}/issues/${results.issue.number}/comments`,
+        `https://api.github.com/repos/${payload.repository.full_name}/issues/${payload.issue.number}/comments`,
         {
           body: body,
         },
@@ -25,10 +25,10 @@ const routes = {
   },
 
   // add label to issue
-  addLabel: (results, labels) => {
+  addLabel: (payload, labels) => {
     axios
       .post(
-        `https://api.github.com/repos/${results.repository.full_name}/issues/${results.issue.number}/labels`,
+        `https://api.github.com/repos/${payload.repository.full_name}/issues/${payload.issue.number}/labels`,
         {
           headers: headers,
           body: labels,
@@ -39,10 +39,10 @@ const routes = {
   },
 
   // remove label from issue
-  removeLabel: (results, label) => {
+  removeLabel: (payload, label) => {
     axios
       .delete(
-        `https://api.github.com/repos/${results.repository.full_name}/issues/${results.issue.number}/labels/${label}`,
+        `https://api.github.com/repos/${payload.repository.full_name}/issues/${payload.issue.number}/labels/${label}`,
         {
           headers: headers,
         }

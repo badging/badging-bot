@@ -3,16 +3,16 @@ const { parsed: envs } = require("dotenv").config();
 
 let messageObj;
 
-const calculateBadge = async (results) => {
+const calculateBadge = async (payload) => {
   let initialCheckCount = 6,
-    issueURL = `https://api.github.com/repos/${results.repository.full_name}/issues/${results.issue.number}`;
-  results.repository.name === "event-diversity-and-inclusion"
+    issueURL = `https://api.github.com/repos/${payload.repository.full_name}/issues/${payload.issue.number}`;
+  payload.repository.name === "event-diversity-and-inclusion"
     ? (initialCheckCount = 4)
     : initialCheckCount;
 
   await axios
     .get(
-      `https://api.github.com/repos/${results.repository.full_name}/issues/${results.issue.number}/comments`,
+      `https://api.github.com/repos/${payload.repository.full_name}/issues/${payload.issue.number}/comments`,
       {
         headers: {
           Authorization: `token ${envs.BOT_TOKEN}`,

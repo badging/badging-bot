@@ -1,8 +1,8 @@
 const calculateBadge = require("./calculate.badge");
 const { issueComment } = require("./routes");
 
-const getResults = async (results) => {
-  const resultsArray = await calculateBadge(results);
+const getResults = async (payload) => {
+  const resultsArray = await calculateBadge(payload);
   const message =
     "\nReview percentage: " +
     resultsArray.reviewResult +
@@ -11,7 +11,7 @@ const getResults = async (results) => {
     resultsArray.reviewerCount +
     "\n";
 
-  return await issueComment(results, resultsArray.markdownBadgeImage + message);
+  return await issueComment(payload, resultsArray.markdownBadgeImage + message);
 };
 
 module.exports = getResults;

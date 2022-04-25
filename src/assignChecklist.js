@@ -5,19 +5,19 @@ const {
   checklist,
 } = require("../content.json");
 
-const assignChecklist = async (results) => {
-  const heading = `# Checklist for @${results.assignee.login}`;
+const assignChecklist = async (payload) => {
+  const heading = `# Checklist for @${payload.assignee.login}`;
   let reviewerMessage;
-  results.issue.title.substring(0, 15) == "[Virtual Event]"
+  payload.issue.title.substring(0, 15) == "[Virtual Event]"
     ? (reviewerMessage =
-        "@" + results.assignee.login + " " + reviewerWelcome + checklistVirtual)
+        "@" + payload.assignee.login + " " + reviewerWelcome + checklistVirtual)
     : (reviewerMessage =
-        "@" + results.assignee.login + " " + reviewerWelcome + checklist);
+        "@" + payload.assignee.login + " " + reviewerWelcome + checklist);
 
-  await issueComment(results, heading + "\n" + reviewerMessage);
+  await issueComment(payload, heading + "\n" + reviewerMessage);
 
-  if (results.issue.assignees.length == 2) {
-    await addLabel(results, ["review-begin"]);
+  if (payload.issue.assignees.length == 2) {
+    await addLabel(payload, ["review-begin"]);
   }
 };
 

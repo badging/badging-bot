@@ -1,40 +1,40 @@
 const {
-  getResults,
   help,
   endReview,
   welcome,
   assignChecklist,
+  getResults,
 } = require("./src");
 
-const bot = (results) => {
-  switch (results.action) {
+const bot = (payload) => {
+  switch (payload.action) {
     case "opened":
       // welcome note
       if (
-        results.issue.title.includes("[Virtual Event]") ||
-        results.issue.title.includes("[In-Person Event]")
+        payload.issue.title.includes("[Virtual Event]") ||
+        payload.issue.title.includes("[In-Person Event]")
       ) {
-        welcome(results);
+        welcome(payload);
       }
       break;
     case "assigned":
       if (
-        results.issue.title.includes("[Virtual Event]") ||
-        results.issue.title.includes("[In-Person Event]")
+        payload.issue.title.includes("[Virtual Event]") ||
+        payload.issue.title.includes("[In-Person Event]")
       ) {
-        assignChecklist(results);
+        assignChecklist(payload);
       }
       break;
 
     case "created":
-      if (results.comment.body.includes("/result")) {
-        getResults(results);
+      if (payload.comment.body.includes("/result")) {
+        getResults(payload);
       }
-      if (results.comment.body.includes("/end")) {
-        endReview(results);
+      if (payload.comment.body.includes("/end")) {
+        endReview(payload);
       }
-      if (results.comment.body.includes("/help")) {
-        help(results);
+      if (payload.comment.body.includes("/help")) {
+        help(payload);
       }
       break;
 

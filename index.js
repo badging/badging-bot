@@ -14,9 +14,9 @@ app.use(router);
 
 // receive webhook responses from repo
 router.post("/", async (req, res) => {
-  const data = await req.body;
+  const payload = await req.body;
   res.sendStatus(200);
-  bot(data);
+  bot(payload);
 });
 
 // setup local server
