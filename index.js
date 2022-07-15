@@ -1,6 +1,7 @@
 const {App, createNodeMiddleware}  = require('octokit')
 const { parsed: envs } = require("dotenv").config();
 const SmeeClient = require("smee-client");
+const {welcome} = require("./src/index");
 
 // instantiate Github App
 const app = new App({
@@ -14,24 +15,12 @@ const app = new App({
 });
 
 app.webhooks.on("issues.opened", async ({ octokit, payload }) => {
-
-  const { data: { content } } = await octokit.rest.repos.getContent({
-    owner: payload.repository.owner.login,
-    repo: payload.repository.name,
-    path: ".github/applicant-welcome.md"
-  })
-
-  await octokit.rest.issues.createComment({
-    owner: payload.repository.owner.login,
-    repo: payload.repository.name,
-    issue_number: payload.issue.number,
-    body: Buffer.from(content, "base64").toString()
-  }).then((res) => console.log(res.status)).catch(err => console.error(err))
-
+  welcome(octokit, payload);
 })
 
 // create local server to receive webhooks
 require("http").createServer(createNodeMiddleware(app)).listen(envs.PORT);
+
 
 //connect local server to network client in development
 if (process.env.NODE_ENV !== "production") {
