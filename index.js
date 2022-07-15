@@ -1,7 +1,7 @@
 const {App, createNodeMiddleware}  = require('octokit')
 const { parsed: envs } = require("dotenv").config();
 const SmeeClient = require("smee-client");
-const {welcome} = require("./src/index");
+const {welcome, assignChecklist} = require("./src/index");
 
 // instantiate Github App
 const app = new App({
@@ -16,6 +16,10 @@ const app = new App({
 
 app.webhooks.on("issues.opened", async ({ octokit, payload }) => {
   welcome(octokit, payload);
+})
+
+app.webhooks.on("issues.assigned", async ({ octokit, payload }) => {
+  assignChecklist(octokit, payload)
 })
 
 // create local server to receive webhooks

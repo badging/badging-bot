@@ -1,24 +1,43 @@
-const { issueComment, addLabel } = require("./routes");
-const {
-  reviewerWelcome,
-  checklistVirtual,
-  checklist,
-} = require("../content.json");
+const assignChecklist = async (octokit, payload) => {
+  let content;
+  payload.issue.title.substring(0, 15) == "[Virtual Event]" ?
+    { data: { content } } = await octokit.rest.repos.getContent({
+      owner: payload.repository.owner.login,
+      repo: payload.repository.name,
+      path: ".github/checklistVirtual.md"
+    })
+    :
+    { data: { content } } = await octokit.rest.repos.getContent({
+      owner: payload.repository.owner.login,
+      repo: payload.repository.name,
+      path: ".github/checklist.md"
+    })
 
-const assignChecklist = async (payload) => {
+//add the reviewer welcome here and implement it
+
+
   const heading = `# Checklist for @${payload.assignee.login}`;
-  let reviewerMessage;
-  payload.issue.title.substring(0, 15) == "[Virtual Event]"
-    ? (reviewerMessage =
-        "@" + payload.assignee.login + " " + reviewerWelcome + checklistVirtual)
-    : (reviewerMessage =
-        "@" + payload.assignee.login + " " + reviewerWelcome + checklist);
 
-  await issueComment(payload, heading + "\n" + reviewerMessage);
+  let reviewerMessage =
+    "@" + payload.assignee.login + " " + Buffer.from(content, "base64").toString()
+
+
+  await octokit.rest.issues.createComment({
+    owner: payload.repository.owner.login,
+    repo: payload.repository.name,
+    issue_number: payload.issue.number,
+    body: reviewerMessage
+  }).then((res) => console.log(res.status)).catch(err => console.error(err))
 
   if (payload.issue.assignees.length == 2) {
-    await addLabel(payload, ["review-begin"]);
+    await octokit.rest.issues.addLabels({
+      owner: payload.repository.owner.login,
+      repo: payload.repository.name,
+      issue_number: payload.issue.number,
+      labels: ["review-begin"]
+    }).then((res) => console.log(res.status)).catch(err => console.error(err))
   }
-};
+
+}
 
 module.exports = assignChecklist;
