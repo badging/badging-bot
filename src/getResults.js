@@ -1,8 +1,7 @@
 const calculateBadge = require("./calculate.badge");
-const { issueComment } = require("./routes");
 
-const getResults = async (payload) => {
-  const resultsArray = await calculateBadge(payload);
+const getResults = async (octokit,payload) => {
+  const resultsArray = await calculateBadge(octokit,payload);
   const message =
     "\nReview percentage: " +
     resultsArray.reviewResult +
@@ -11,7 +10,13 @@ const getResults = async (payload) => {
     resultsArray.reviewerCount +
     "\n";
 
-  return await issueComment(payload, resultsArray.markdownBadgeImage + message);
+    await octokit.rest.issues.createComment({
+      owner: payload.repository.owner.login,
+      repo: payload.repository.name,
+      issue_number: payload.issue.number,
+      body: message
+    }).then((res) => console.log(res.status)).catch(err => console.error(err))
+
 };
 
 module.exports = getResults;

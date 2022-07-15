@@ -1,26 +1,17 @@
-const axios = require("axios");
-const { parsed: envs } = require("dotenv").config();
-
 let messageObj;
 
-const calculateBadge = async (payload) => {
+const calculateBadge = async (octokit,payload) => {
   let initialCheckCount = 6,
-    issueURL = `https://api.github.com/repos/${payload.repository.full_name}/issues/${payload.issue.number}`;
+    issueURL = payload.issue.html_url
   payload.repository.name === "event-diversity-and-inclusion"
     ? (initialCheckCount = 4)
     : initialCheckCount;
 
-  await axios
-    .get(
-      `https://api.github.com/repos/${payload.repository.full_name}/issues/${payload.issue.number}/comments`,
-      {
-        headers: {
-          Authorization: `token ${envs.BOT_TOKEN}`,
-          Accept: "application/vnd.github.v3+json",
-          "content-type": "application/json",
-        },
-      }
-    )
+    await octokit.rest.issues.listComments({
+        owner: payload.repository.owner.login,
+        repo: payload.repository.name,
+        issue_number: payload.issue.number,
+    })
     .then((res) => {
       let checklists = res.data.filter((comment) => {
         return (

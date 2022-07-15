@@ -1,7 +1,7 @@
-const {App, createNodeMiddleware}  = require('octokit')
+const { App, createNodeMiddleware } = require('octokit')
 const { parsed: envs } = require("dotenv").config();
 const SmeeClient = require("smee-client");
-const {welcome, assignChecklist} = require("./src/index");
+const { welcome, assignChecklist, getResults, help,endReview } = require("./src/index");
 
 // instantiate Github App
 const app = new App({
@@ -14,12 +14,28 @@ const app = new App({
   webhooks: { secret: envs.webhookSecret },
 });
 
+// bot algorithm
 app.webhooks.on("issues.opened", async ({ octokit, payload }) => {
   welcome(octokit, payload);
 })
 
 app.webhooks.on("issues.assigned", async ({ octokit, payload }) => {
   assignChecklist(octokit, payload)
+})
+
+app.webhooks.on("issue_comment.created", async ({ octokit, payload }) => {
+  console.log(payload)
+  if (payload.comment.body.includes("/result")) {
+    getResults(octokit, payload);
+  }
+
+  if (payload.comment.body.includes("/end")) {
+    endReview(octokit, payload);
+  }
+
+  if (payload.comment.body.includes("/help")) {
+    help(octokit, payload);
+  }
 })
 
 // create local server to receive webhooks
