@@ -13,13 +13,19 @@ const assignChecklist = async (octokit, payload) => {
       path: ".github/checklist.md"
     })
 
-//add the reviewer welcome here and implement it
+    const reviewerGuide = await octokit.rest.repos.getContent({
+      owner: payload.repository.owner.login,
+      repo: payload.repository.name,
+      path: ".github/reviewer-welcome.md"
+    })
+
+    const reviewerWelcome = Buffer.from(reviewerGuide.data.content,"base64").toString()
 
 
   const heading = `# Checklist for @${payload.assignee.login}`;
 
   let reviewerMessage =
-    "@" + payload.assignee.login + " " + Buffer.from(content, "base64").toString()
+    "@" + payload.assignee.login + " " + reviewerWelcome + Buffer.from(content, "base64").toString()
 
 
   await octokit.rest.issues.createComment({
@@ -29,7 +35,7 @@ const assignChecklist = async (octokit, payload) => {
     body: heading + "\n" + reviewerMessage
   }).then((res) => console.log(res.status)).catch(err => console.error(err))
 
-  if (payload.issue.assignees.length == 1) {
+  if (payload.issue.assignees.length == 2) {
     await octokit.rest.issues.addLabels({
       owner: payload.repository.owner.login,
       repo: payload.repository.name,
