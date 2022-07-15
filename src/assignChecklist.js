@@ -4,7 +4,7 @@ const assignChecklist = async (octokit, payload) => {
     { data: { content } } = await octokit.rest.repos.getContent({
       owner: payload.repository.owner.login,
       repo: payload.repository.name,
-      path: ".github/checklistVirtual.md"
+      path: ".github/checklist-virtual.md"
     })
     :
     { data: { content } } = await octokit.rest.repos.getContent({
