@@ -24,7 +24,6 @@ app.webhooks.on("issues.assigned", async ({ octokit, payload }) => {
 })
 
 app.webhooks.on("issue_comment.created", async ({ octokit, payload }) => {
-  console.log(payload)
   if (payload.comment.body.includes("/result")) {
     getResults(octokit, payload);
   }

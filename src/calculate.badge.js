@@ -7,13 +7,14 @@ const calculateBadge = async (octokit,payload) => {
     ? (initialCheckCount = 4)
     : initialCheckCount;
 
-    await octokit.rest.issues.listComments({
+   const comments =  await octokit.rest.issues.listComments({
         owner: payload.repository.owner.login,
         repo: payload.repository.name,
         issue_number: payload.issue.number,
     })
-    .then((res) => {
-      let checklists = res.data.filter((comment) => {
+
+
+      let checklists = comments.data.filter((comment) => {
         return (
           comment.user.type == "Bot" &&
           comment.body.substring(0, 15) == "# Checklist for"
@@ -84,8 +85,7 @@ const calculateBadge = async (octokit,payload) => {
         reviewResult: reviewResult,
         reviewerCount: reviewerCount,
       };
-    })
-    .catch((err) => console.log(err));
+
 
   return messageObj;
 };

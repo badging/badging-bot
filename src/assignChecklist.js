@@ -26,10 +26,10 @@ const assignChecklist = async (octokit, payload) => {
     owner: payload.repository.owner.login,
     repo: payload.repository.name,
     issue_number: payload.issue.number,
-    body: reviewerMessage
+    body: heading + "\n" + reviewerMessage
   }).then((res) => console.log(res.status)).catch(err => console.error(err))
 
-  if (payload.issue.assignees.length == 2) {
+  if (payload.issue.assignees.length == 1) {
     await octokit.rest.issues.addLabels({
       owner: payload.repository.owner.login,
       repo: payload.repository.name,
