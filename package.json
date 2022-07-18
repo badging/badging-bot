@@ -15,7 +15,7 @@
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run prettier:fix && npm run lint:fix",
     "dev": "NODE_ENV=development nodemon index.js",
-    "build": "NODE_ENV=production node index.js"
+    "start": "NODE_ENV=production node index.js"
   },
   "dependencies": {
     "dotenv": "16.0.0",
