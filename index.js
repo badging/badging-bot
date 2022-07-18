@@ -1,17 +1,17 @@
 const { App, createNodeMiddleware } = require('octokit')
-const { parsed: envs } = require("dotenv").config();
+require("dotenv").config();
 const SmeeClient = require("smee-client");
 const { welcome, assignChecklist, getResults, help,endReview } = require("./src/index");
 
 // instantiate Github App
 const app = new App({
-  appId: envs.appId,
-  privateKey: envs.privateKey,
+  appId: process.env.appId,
+  privateKey: process.env.privateKey,
   oauth: {
-    clientId: envs.clientId,
-    clientSecret: envs.clientSecret,
+    clientId: process.env.clientId,
+    clientSecret: process.env.clientSecret,
   },
-  webhooks: { secret: envs.webhookSecret },
+  webhooks: { secret: process.env.webhookSecret },
 });
 
 // bot algorithm
@@ -38,7 +38,7 @@ app.webhooks.on("issue_comment.created", async ({ octokit, payload }) => {
 })
 
 // create local server to receive webhooks
-require("http").createServer(createNodeMiddleware(app)).listen(envs.PORT);
+require("http").createServer(createNodeMiddleware(app)).listen(process.env.PORT);
 
 
 //connect local server to network client in development
