@@ -3,7 +3,3 @@ npm-debug.log
 *.pem
 !mock-cert.pem
 .env
-token.txt
-coverage
-src/reviewers.json
-content.json

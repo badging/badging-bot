@@ -1,9 +1,19 @@
-FROM node:16
-WORKDIR /bot
-COPY package*.json ./
+FROM node:14-alpine
 
-RUN npm ci
-COPY . .
-EXPOSE 5050
-CMD npm start
+# Optimise for production
+ENV NODE_ENV production
 
+# Create app directory
+WORKDIR /usr/src/app
+
+# Copy app files
+COPY --chown=node:node . /usr/src/app
+
+# Install only production dependencies
+RUN npm ci --only=production
+
+USER node
+
+# Make port 8080 accessible outside of the container
+EXPOSE 8080
+CMD "npm" "start"
