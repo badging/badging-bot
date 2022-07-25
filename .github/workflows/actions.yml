@@ -2,14 +2,16 @@ name: Push to DockerHub
 
 on:
   push:
-    branches:[main]
+    branches:
+      [main]
 
   pull_request:
-    branches:[main]
+    branches:
+      [main]
 
 jobs:
   build:
-  - name: build docker image and push to DockerHub
+    name: build docker image and push to DockerHub
     runs-on: ubuntu-latest
 
     strategy:
