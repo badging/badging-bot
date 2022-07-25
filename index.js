@@ -42,11 +42,9 @@ require("http").createServer(createNodeMiddleware(app)).listen(process.env.PORT)
 
 
 //connect local server to network client in development
-if (process.env.NODE_ENV !== "production") {
   const smee = new SmeeClient({
     source: "https://smee.io/badging",
     target: `http://localhost:${process.env.PORT}/api/github/webhooks`,
     logger: console,
   });
   smee.start();
-}
