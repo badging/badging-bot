@@ -37,15 +37,7 @@ jobs:
       - run: npm test --if-present
         
       - name: Build container image
-        run: docker build \
-             -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) \
-             --build-arg appId=${{secrets.APPID}} \
-             --build-arg privateKey=${{secrets.PRIVATEKEY}} \
-             --build-arg clientId=${{secrets.CLIENTID}} \
-             --build-arg clientSecret=${{secrets.CLIENTSECRET}} \
-             --build-arg webhookSecrect=${{secrets.WEBHOOKSECRET}} \
-             --build-arg PORT=${{secrets.PORT}} \
-             .
+        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) --build-arg appId=${{secrets.APPID}} --build-arg privateKey=${{secrets.PRIVATEKEY}} --build-arg clientId=${{secrets.CLIENTID}} --build-arg clientSecret=${{secrets.CLIENTSECRET}} --build-arg webhookSecrect=${{secrets.WEBHOOKSECRET}} --build-arg PORT=${{secrets.PORT}} .
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
