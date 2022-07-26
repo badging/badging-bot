@@ -1,53 +1,80 @@
-name: Push to DockerHub
+name: CI
 
 on:
   push:
-    branches:
-      [main]
+    branches: [ main ]
 
   pull_request:
-    branches:
-      [main]
+    branches: [ main ]
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Image version'
+        required: true
+#2
+env:
+  REGISTRY: "registry.digitalocean.com/chaoss-badging"
+  IMAGE_NAME: "badging-bot"
+
+#3
 jobs:
-  build:
-    name: build docker image and push to DockerHub
+  build_and_push:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [14.x]
-
     steps:
-    - uses: actions/checkout@v2
-    - name: uses node version ${{matrix.node-version}}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{matrix.node-version}}
-        cache: npm
+      - name: Checkout the repo
+        uses: actions/checkout@v2
 
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test --if-present
+      - name: uses node version ${{matrix.node-version}}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{matrix.node-version}}
+          cache: npm
 
-    - name: login to DockerHub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm test --if-present
+        
+      - name: Build container image
+        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
 
-    - name: build docker image
-      id: buildx
-      uses: docker/setup-buildx-action@v1
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+    
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+      
+      - name: Remove all old images
+        run: if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $IMAGE_NAME) $(doctl registry repository list-tags $(echo $IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
 
-    - name: build and push
-      id: docker_build
-      uses: docker/build-push-action@v2
-      with:
-        context: ./
-        file: ./Dockerfile
-        push: true
-        tags: ${{secrets.DOCKERHUB_USERNAME}}/badging-bot:latest
-
-    - name: image digest
-      run: echo ${{steps.docker_build.outputs.digest}}
+      - name: Push image to DigitalOcean Container Registry
+        run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
+        
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build_and_push
+    
+    steps:
+      - name: Deploy to Digital Ocean droplet via SSH action
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+          envs: IMAGE_NAME,REGISTRY,{{ secrets.DIGITALOCEAN_ACCESS_TOKEN }},GITHUB_SHA
+          script: |
+            # Login to registry
+            docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
+            # Stop running container
+            docker stop $(echo $IMAGE_NAME)
+            # Remove old container
+            docker rm $(echo $IMAGE_NAME)
+            # Run a new container from a new image
+            docker run -d \
+            --restart always \
+            --name $(echo $IMAGE_NAME) \
+            $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
