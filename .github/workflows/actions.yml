@@ -78,7 +78,7 @@ jobs:
             -e privateKey=${{secrets.PRIVATEKEY}} \
             -e clientId=${{secrets.CLIENTID}} \
             -e clientSecret=${{secrets.CLIENTSECRET}} \
-            -e webhookSecrect=${{secrets.WEBHOOKSECRET}} \
+            -e webhookSecret=${{secrets.WEBHOOKSECRET}} \
             -e PORT=${{secrets.PORT}} \
             --restart always \
             --name $(echo $IMAGE_NAME) \
