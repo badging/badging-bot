@@ -1,5 +1,7 @@
 # Badging-bot
+
 [![CI](https://github.com/badging/badging-bot/actions/workflows/actions.yml/badge.svg)](https://github.com/badging/badging-bot/actions/workflows/actions.yml)
+
 #
 
 The `@badging-bot,` is a GitHub App that helps to coordinate the workflow of the [D&I Badging](https://handbook.chaoss.community/community-handbook/badging/overview), a peer-review program that is managed by the [CHAOSS Community](https://handbook.chaoss.community/community-handbook/). The main function of the badging-bot is to improve the efficiency of the review process of badging applications with some automated integration.

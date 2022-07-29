@@ -1,4 +1,4 @@
-const calculateBadge = require('./calculate.badge')
+const calculateBadge = require("./calculate.badge");
 const endReview = async (octokit, payload) => {
   let resultsObj = await calculateBadge(octokit, payload);
   let message =
@@ -9,37 +9,39 @@ const endReview = async (octokit, payload) => {
     resultsObj.htmlBadgeImage +
     "\n```";
 
-    // get moderators list
+  // get moderators list
   const moderators = await octokit.rest.repos.getContent({
     owner: payload.repository.owner.login,
     repo: payload.repository.name,
-    path: ".github/moderators.md"
-  })
+    path: ".github/moderators.md",
+  });
 
   // remove label
   await octokit.rest.issues.removeLabel({
     owner: payload.repository.owner.login,
     repo: payload.repository.name,
     issue_number: payload.issue.number,
-    name: "review-begin"
-  })
+    name: "review-begin",
+  });
 
   // add label(s)
   await octokit.rest.issues.addLabels({
     owner: payload.repository.owner.login,
     repo: payload.repository.name,
     issue_number: payload.issue.number,
-    labels: ["review-end"]
-  })
+    labels: ["review-end"],
+  });
 
   // comment out results and badge
-  await octokit.rest.issues.createComment({
-    owner: payload.repository.owner.login,
-    repo: payload.repository.name,
-    issue_number: payload.issue.number,
-    body: resultsObj.markdownBadgeImage + message
-  }).then((res) => console.log(res.status)).catch(err => console.error(err))
-
+  await octokit.rest.issues
+    .createComment({
+      owner: payload.repository.owner.login,
+      repo: payload.repository.name,
+      issue_number: payload.issue.number,
+      body: resultsObj.markdownBadgeImage + message,
+    })
+    .then((res) => console.log(res.status))
+    .catch((err) => console.error(err));
 };
 
 module.exports = endReview;
