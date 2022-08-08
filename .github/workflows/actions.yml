@@ -1,17 +1,20 @@
 name: CI
 
+# 1
+# Controls when the workflow will run
 on:
+  # Triggers the workflow on push events but only for the master branch
   push:
-    branches: [main]
-
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
+  
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
     inputs:
       version:
-        description: "Image version"
+        description: 'Image version'
         required: true
 #2
 env:
@@ -23,19 +26,9 @@ jobs:
   build_and_push:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout the repo
+      - name: Checkout the repo 
         uses: actions/checkout@v2
-
-      - name: uses node version ${{matrix.node-version}}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{matrix.node-version}}
-          cache: npm
-
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test --if-present
-
+        
       - name: Build container image
         run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
 
@@ -43,20 +36,20 @@ jobs:
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-
+    
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
-
+      
       - name: Remove all old images
         run: if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $IMAGE_NAME) $(doctl registry repository list-tags $(echo $IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
-
+        
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push
-
+    
     steps:
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@v0.1.3
@@ -73,9 +66,7 @@ jobs:
             # Remove old container
             docker rm $(echo $IMAGE_NAME)
             # Run a new container from a new image
-            docker run -d -e appId=${{ secrets.APPID }} -e privateKey=${{secrets.PRIVATEKEY}} -e clientSecret=${{secrets.CLIENTSECRET}} -e webhookSecret=${{secrets.WEBHOOKSECRET}} \
-            -e PORT=${{secrets.PORT}} \
-            -e clientId=${{secrets.CLIENTID}} \
+            docker run -d \
             --restart always \
             --name $(echo $IMAGE_NAME) \
             $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
