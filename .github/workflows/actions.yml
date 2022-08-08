@@ -73,11 +73,7 @@ jobs:
             # Remove old container
             docker rm $(echo $IMAGE_NAME)
             # Run a new container from a new image
-            docker run -d \
-            -e appId=${{ secrets.APPID }} \
-            -e privateKey=${{secrets.PRIVATEKEY}} \
-            -e clientSecret=${{secrets.CLIENTSECRET}} \
-            -e webhookSecret=${{secrets.WEBHOOKSECRET}} \
+            docker run -d -e appId=${{ secrets.APPID }} -e privateKey=${{secrets.PRIVATEKEY}} -e clientSecret=${{secrets.CLIENTSECRET}} -e webhookSecret=${{secrets.WEBHOOKSECRET}} \
             -e PORT=${{secrets.PORT}} \
             -e clientId=${{secrets.CLIENTID}} \
             --restart always \
