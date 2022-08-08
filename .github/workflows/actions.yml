@@ -16,7 +16,7 @@ on:
 #2
 env:
   REGISTRY: "registry.digitalocean.com/chaoss-badging"
-  IMAGE_NAME: "badging-bot"
+  IMAGE_NAME: "badging-bot-v2"
 
 #3
 jobs:
