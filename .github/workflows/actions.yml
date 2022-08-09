@@ -31,13 +31,14 @@ jobs:
         
       - name: Build container image
         run: docker build \
+            -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) \
             --build-arg appId=${{secrets.APPID}} \
             --build-arg clientId=${{secrets.CLIENTID}} \
             --build-arg clientSecret=${{secrets.CLIENTSECRET}} \
             --build-arg webhookSecret={{secrets.WEBHOOKSECRET}} \
             --build-arg PORT=${{secrets.PORT}} \
-            --build-arg privateKey=${{secrets.PRIVATEKEY}} \
-            -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+            --build-arg privateKey=${{secrets.PRIVATEKEY}} .
+            
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
