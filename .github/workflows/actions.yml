@@ -31,11 +31,12 @@ jobs:
         
       - name: Build container image
         run: docker build \
-            --build-arg appId=70200 \
-            --build-arg clientId="Iv1.49710fd552d9cc94" \
-            --build-arg clientSecret="cb9ee25638cc94aa57126cd0d944ec7757c5f82d" \
-            --build-arg webhookSecret="ea19855e695da7b70cdf8ad58dfce2721a382984" \
-            --build-arg PORT=8080 \
+            --build-arg appId=${{secrets.APPID}} \
+            --build-arg clientId=${{secrets.CLIENTID}} \
+            --build-arg clientSecret=${{secrets.CLIENTSECRET}} \
+            --build-arg webhookSecret={{secrets.WEBHOOKSECRET}} \
+            --build-arg PORT=${{secrets.PORT}} \
+            --build-arg privateKey=${{secrets.PRIVATEKEY}} \
             -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
 
       - name: Install doctl
