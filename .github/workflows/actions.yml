@@ -20,7 +20,9 @@ on:
 env:
   REGISTRY: "registry.digitalocean.com/chaoss-badging"
   IMAGE_NAME: "badging-bot-v2"
-
+  APPID: ${{secrets.APPID}}
+  CLIENTID: ${{secrets.CLIENTID}} 
+  
 #3
 jobs:
   build_and_push:
@@ -29,15 +31,8 @@ jobs:
       - name: Checkout the repo 
         uses: actions/checkout@v2
         
-      - name: check env vars
-        run: |
-          $export appId=${{secrets.APPID}}
-          $export clientId=${{secrets.CLIENTID}}
-          $echo appId
-          $echo clientId
-        
       - name: Build container image
-        run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+        run: docker build --build-arg appId=$(echo $APPID) --build-arg clientId=$(echo $CLIENTID) -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
             
 
       - name: Install doctl
