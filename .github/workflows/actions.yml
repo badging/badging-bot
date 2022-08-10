@@ -30,7 +30,7 @@ jobs:
         uses: actions/checkout@v2
         
       - name: Build container image
-        run: docker build --build-arg appId=${{secrets.APPID}} --build-arg clientId=$clientId -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
+        run: docker build --build-arg appId=${{secrets.APPID}} --build-arg clientId=${{secrets.CLIENTID}} $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
             
 
       - name: Install doctl
