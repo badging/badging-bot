@@ -29,15 +29,11 @@ jobs:
       - name: Checkout the repo 
         uses: actions/checkout@v2
         
+      - name: check docker version
+        run: docker --version
+        
       - name: Build container image
-        run: docker build \
-            -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) \
-            --build-arg appId=${{secrets.APPID}} \
-            --build-arg clientId=${{secrets.CLIENTID}} \
-            --build-arg clientSecret=${{secrets.CLIENTSECRET}} \
-            --build-arg webhookSecret={{secrets.WEBHOOKSECRET}} \
-            --build-arg PORT=${{secrets.PORT}} \
-            --build-arg privateKey=${{secrets.PRIVATEKEY}} .
+        run: docker build --build-arg appId=${{secrets.APPID}} -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
             
 
       - name: Install doctl
