@@ -51,6 +51,11 @@ jobs:
             docker stop $(echo $IMAGE_NAME)
             docker rm $(echo $IMAGE_NAME)
             docker run -d \
+            -e clientId=${{secrets.CLIENTID}} \
+            -e appId=${{ secrets.APPID}} \
+            -e clientSecret=${{ secrets.CLIENTSECRET }} \
+            -e webhookSecret=${{ secrets.WEBHOOKSECRET }} \
+            -e PORT=${{secrets.PORT}} \
             --restart always \
             --name $(echo $IMAGE_NAME) \
             $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
