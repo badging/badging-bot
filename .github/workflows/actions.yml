@@ -12,10 +12,11 @@ jobs:
     steps:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
+      env:
+        DO_TOKEN: ${{secrets.DIGITALOCEAN_ACCESS_TOKEN}}
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        script: |
-          whoami
-          pwd
+        envs: DO_TOKEN
+        script: docker login -u $DO_TOKEN -p $DO_TOKEN registry.digitalocean.com
