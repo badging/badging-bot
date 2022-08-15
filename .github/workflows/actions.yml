@@ -18,4 +18,4 @@ jobs:
         password: ${{ secrets.PASSWORD }}
         script: |
           whoami
-          ls -al
+          pwd
