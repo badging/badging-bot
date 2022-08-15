@@ -5,6 +5,10 @@ on:
   pull_request:
     branches: [ main ]
     
+env:
+  REGISTRY: "registry.digitalocean.com/chaoss-badging"
+  IMAGE_NAME: "badging-bot-v2"
+    
 jobs:
   build:
     name: Build
@@ -14,9 +18,20 @@ jobs:
       uses: appleboy/ssh-action@master
       env:
         DO_TOKEN: ${{secrets.DIGITALOCEAN_ACCESS_TOKEN}}
+        IMAGE: $(echo $IMAGE_NAME)
+        REGISTRY: $(echo $REGISTRY)
+        
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
-        envs: DO_TOKEN
-        script: docker login -u $DO_TOKEN -p $DO_TOKEN registry.digitalocean.com
+        script_stop: true
+        envs: DO_TOKEN, IMAGE, REGISTRY
+        script: |
+          docker login -u $DO_TOKEN -p $DO_TOKEN registry.digitalocean.com
+          docker stop $IMAGE
+          docker rm $IMAGE
+          docker run -d \
+            --restart always \
+            --name $IMAGE_NAME \
+            $REGISTRY/$IMAGE_NAME:$(echo $GITHUB_SHA | head -c7)
