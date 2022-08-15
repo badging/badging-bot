@@ -18,7 +18,6 @@ jobs:
         
       - name: Build container image
         run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
-            
 
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
@@ -34,30 +33,24 @@ jobs:
       - name: Push image to DigitalOcean Container Registry
         run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
         
-        
   deploy:
-    name: Deploy
     runs-on: ubuntu-latest
     needs: build_and_push
+    
     steps:
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
-      env:
-        DO_TOKEN: ${{secrets.DIGITALOCEAN_ACCESS_TOKEN}}
-        IMAGE: $(echo $IMAGE_NAME)
-        REGISTRY: $(echo $REGISTRY)
-        
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        script_stop: true
-        envs: DO_TOKEN, IMAGE, REGISTRY
-        script: |
-          docker login -u $DO_TOKEN -p $DO_TOKEN registry.digitalocean.com
-          docker stop $IMAGE
-          docker rm $IMAGE
-          docker run -d \
+      - name: Deploy to Digital Ocean droplet via SSH action
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          envs: IMAGE_NAME,REGISTRY,{{ secrets.DIGITALOCEAN_ACCESS_TOKEN }},GITHUB_SHA
+          script: |
+            # Login to registry
+            docker login -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} registry.digitalocean.com
+            docker stop $(echo $IMAGE_NAME)
+            docker rm $(echo $IMAGE_NAME)
+            docker run -d \
             --restart always \
-            --name $IMAGE \
-            $REGISTRY/$IMAGE:$(echo $GITHUB_SHA | head -c7)
+            --name $(echo $IMAGE_NAME) \
+            $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
