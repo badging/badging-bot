@@ -15,7 +15,8 @@
     "prettier:fix": "npm run prettier -- --write",
     "format": "npm run prettier:fix && npm run lint:fix",
     "dev": "NODE_ENV=development nodemon index.js",
-    "start": "NODE_ENV=production node index.js"
+    "start": "NODE_ENV=production node index.js",
+    "prepare": "husky install"
   },
   "dependencies": {
     "dotenv": "16.0.0",
@@ -25,7 +26,7 @@
     "eslint": "8.13.0",
     "eslint-config-prettier": "8.5.0",
     "eslint-plugin-prettier": "4.0.0",
-    "husky": "7.0.4",
+    "husky": "^8.0.0",
     "lint-staged": "12.3.7",
     "nodemon": "2.0.15",
     "prettier": "2.6.2",
@@ -38,10 +39,5 @@
     ".": [
       "npm run format"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   }
 }
