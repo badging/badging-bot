@@ -50,7 +50,7 @@ require("http")
 
 //connect local server to network client in development
 const smee = new SmeeClient({
-  source: "https://smee.io/badging",
+  source: process.env.webhookURL,
   target: `http://localhost:${process.env.PORT}/api/github/webhooks`,
   logger: console,
 });
