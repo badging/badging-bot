@@ -10,11 +10,11 @@ const endReview = async (octokit, payload) => {
     "\n```";
 
   // get moderators list
-  const moderators = await octokit.rest.repos.getContent({
-    owner: payload.repository.owner.login,
-    repo: payload.repository.name,
-    path: ".github/moderators.md",
-  });
+  // const moderators = await octokit.rest.repos.getContent({
+  //   owner: payload.repository.owner.login,
+  //   repo: payload.repository.name,
+  //   path: ".github/moderators.md",
+  // });
 
   // remove label
   await octokit.rest.issues.removeLabel({

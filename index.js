@@ -46,7 +46,10 @@ app.webhooks.on("issue_comment.created", async ({ octokit, payload }) => {
 // create local server to receive webhooks
 require("http")
   .createServer(createNodeMiddleware(app))
-  .listen(process.env.PORT);
+  .listen(process.env.PORT, () =>
+    console.info(`App listening on PORT:${process.env.PORT}`)
+  );
+module.exports = app;
 
 //connect local server to network client in development
 const smee = new SmeeClient({

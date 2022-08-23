@@ -1,14 +1,14 @@
 name: CI
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
-    
+    branches: [main]
+
 env:
   REGISTRY: "registry.digitalocean.com/chaoss-badging"
   IMAGE_NAME: "badging-bot-v2"
-    
+
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
@@ -18,7 +18,7 @@ jobs:
         node-version: [10.x, 12.x, 14.x, 15.x]
 
     steps:
-      - name: Checkout the repo 
+      - name: Checkout the repo
         uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
@@ -28,7 +28,7 @@ jobs:
       - run: npx -y husky-init && npm ci
       - run: npm run build --if-present
       - run: npm test --if-present
-        
+
       - name: Build container image
         run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
 
@@ -36,20 +36,20 @@ jobs:
         uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-    
+
       - name: Log in to DigitalOcean Container Registry with short-lived credentials
         run: doctl registry login --expiry-seconds 600
-      
+
       - name: Remove all old images
         run: if [ ! -z "$(doctl registry repository list | grep "$(echo $IMAGE_NAME)")" ]; then doctl registry repository delete-manifest $(echo $IMAGE_NAME) $(doctl registry repository list-tags $(echo $IMAGE_NAME) | grep -o "sha.*") --force; else echo "No repository"; fi
 
       - name: Push image to DigitalOcean Container Registry
         run: docker push $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
-        
+
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push
-    
+
     steps:
       - name: Deploy to Digital Ocean droplet via SSH action
         uses: appleboy/ssh-action@v0.1.3
