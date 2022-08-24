@@ -22,11 +22,21 @@ const app = new App({
 
 // bot algorithm
 app.webhooks.on("issues.opened", async ({ octokit, payload }) => {
-  welcome(octokit, payload);
+  if (
+    payload.issue.title.includes("[Virtual Event]") ||
+    payload.issue.title.includes("[In-Person Event]")
+  ) {
+    welcome(octokit, payload);
+  }
 });
 
 app.webhooks.on("issues.assigned", async ({ octokit, payload }) => {
-  assignChecklist(octokit, payload);
+  if (
+    payload.issue.title.includes("[Virtual Event]") ||
+    payload.issue.title.includes("[In-Person Event]")
+  ) {
+    assignChecklist(octokit, payload);
+  }
 });
 
 app.webhooks.on("issue_comment.created", async ({ octokit, payload }) => {
