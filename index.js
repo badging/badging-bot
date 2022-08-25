@@ -7,7 +7,7 @@ const {
   getResults,
   help,
   endReview,
-} = require("./src/index");
+} = require("./src/logic/index");
 
 // instantiate Github App
 const app = new App({
