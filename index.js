@@ -1,13 +1,7 @@
 const { App, createNodeMiddleware } = require("octokit");
 require("dotenv").config();
+const githubBot = require("./githubBot");
 const SmeeClient = require("smee-client");
-const {
-  welcome,
-  assignChecklist,
-  getResults,
-  help,
-  endReview,
-} = require("./src/logic/index");
 
 // instantiate Github App
 const app = new App({
@@ -20,37 +14,10 @@ const app = new App({
   webhooks: { secret: process.env.webhookSecret },
 });
 
-// bot algorithm
-app.webhooks.on("issues.opened", async ({ octokit, payload }) => {
-  if (
-    payload.issue.title.includes("[Virtual Event]") ||
-    payload.issue.title.includes("[In-Person Event]")
-  ) {
-    welcome(octokit, payload);
-  }
-});
-
-app.webhooks.on("issues.assigned", async ({ octokit, payload }) => {
-  if (
-    payload.issue.title.includes("[Virtual Event]") ||
-    payload.issue.title.includes("[In-Person Event]")
-  ) {
-    assignChecklist(octokit, payload);
-  }
-});
-
-app.webhooks.on("issue_comment.created", async ({ octokit, payload }) => {
-  if (payload.comment.body.includes("/result")) {
-    getResults(octokit, payload);
-  }
-
-  if (payload.comment.body.includes("/end")) {
-    endReview(octokit, payload);
-  }
-
-  if (payload.comment.body.includes("/help")) {
-    help(octokit, payload);
-  }
+// trigger bot on receipt on any hook
+app.webhooks.onAny(async ({ id, name, payload }) => {
+  const octokit = await app.getInstallationOctokit(payload.installation.id);
+  githubBot(id, name, octokit, payload);
 });
 
 // create local server to receive webhooks

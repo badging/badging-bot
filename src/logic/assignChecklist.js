@@ -168,11 +168,11 @@ const assignChecklist = async (octokit, payload) => {
   ).toString();
 
   // heading for the checklist
-  const heading = `# Checklist for @${payload.assignee.login}`;
+  const heading = `# Checklist for @${payload.issue.assignee.login}`;
 
   // combine all the strings to make one body
   let reviewerMessage =
-    "@" + payload.assignee.login + " " + reviewerWelcome + newChecklist;
+    "@" + payload.issue.assignee.login + " " + reviewerWelcome + newChecklist;
 
   // create issue comment with newChecklist
   await octokit.rest.issues

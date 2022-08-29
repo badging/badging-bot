@@ -14,7 +14,7 @@ const welcome = async (octokit, payload) => {
       issue_number: payload.issue.number,
       body: Buffer.from(content, "base64").toString(),
     })
-    .then((res) => console.log(res.status))
+    .then((res) => console.info(res.status))
     .catch((err) => console.error(err));
 };
 

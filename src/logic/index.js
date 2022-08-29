@@ -1,7 +1,15 @@
 const getResults = require("./getResults");
 const endReview = require("./endReview");
 const help = require("./help");
-const assignChecklist = require("./assignChecklist");
 const welcome = require("./welcome");
+const assignAlgorithm = require("./assignAlgorithm");
+const assignChecklist = require("./assignChecklist");
 
-module.exports = { welcome, assignChecklist, help, getResults, endReview };
+module.exports = {
+  welcome,
+  help,
+  getResults,
+  endReview,
+  assignAlgorithm,
+  assignChecklist,
+};
