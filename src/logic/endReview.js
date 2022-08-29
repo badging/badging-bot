@@ -1,4 +1,6 @@
-const calculateBadge = require("./calculate.badge");
+const calculateBadge = require("./calculate.badge.js");
+const checkModerator = require("./checkModerator.js");
+
 const endReview = async (octokit, payload) => {
   let resultsObj = await calculateBadge(octokit, payload);
   let message =
@@ -8,13 +10,6 @@ const endReview = async (octokit, payload) => {
     "\n**HTML Badge Link:**\n```\n" +
     resultsObj.htmlBadgeImage +
     "\n```";
-
-  // get moderators list
-  // const moderators = await octokit.rest.repos.getContent({
-  //   owner: payload.repository.owner.login,
-  //   repo: payload.repository.name,
-  //   path: ".github/moderators.md",
-  // });
 
   // remove label
   await octokit.rest.issues.removeLabel({
@@ -42,6 +37,16 @@ const endReview = async (octokit, payload) => {
     })
     .then((res) => console.log(res.status))
     .catch((err) => console.error(err));
+
+  // close issue
+  if (checkModerator) {
+    await octokit.rest.issues.update({
+      owner: payload.repository.owner.login,
+      repo: payload.repository.name,
+      issue_number: payload.issue.number,
+      state: "closed",
+    });
+  }
 };
 
 module.exports = endReview;

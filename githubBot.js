@@ -1,7 +1,7 @@
 const {
   welcome,
   getResults,
-  help,
+  // help,
   endReview,
   assignAlgorithm,
   assignChecklist,
@@ -18,7 +18,7 @@ const githubBot = async (id, name, octokit, payload) => {
       welcome(octokit, payload);
     }
 
-    // when issue is assign, triger the assign algorithm
+    // when issue is assigned, triger the assign algorithm
     if (name === "issues" && payload.action === "assigned") {
       assignAlgorithm(id, name, octokit, payload);
     }
@@ -27,6 +27,7 @@ const githubBot = async (id, name, octokit, payload) => {
 
     //TODO: Implement to 24hours lapse
     //TODO: check whether editor is assignee
+    //TODO: Implement the toggle button for Yes and No to avoid double checks
     if (
       name === "issue_comment" &&
       payload.action === "edited" &&
@@ -35,7 +36,28 @@ const githubBot = async (id, name, octokit, payload) => {
       if (payload.comment.body.match(/- \[x\] Yes/g)) {
         assignChecklist(octokit, payload); // assign checklist
       } else if (payload.comment.body.match(/- \[x\] No/g)) {
-        console.log(payload.issue.assignee.login);
+        await octokit.rest.issues
+          .removeAssignees({
+            owner: payload.repository.owner.login,
+            repo: payload.repository.name,
+            issue_number: payload.issue.number,
+            assignees: [payload.issue.assignee.login],
+          })
+          .then((res) => console.info(res.status))
+          .catch((err) => console.error(err));
+      }
+    }
+
+    // comment commands
+    if (name === "issue_comment" && payload.action === "created") {
+      // get results
+      if (payload.comment.body.match("/result")) {
+        getResults(octokit, payload);
+      }
+
+      // end review
+      if (payload.comment.body.match("/end")) {
+        endReview(octokit, payload);
       }
     }
   }

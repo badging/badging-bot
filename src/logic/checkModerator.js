@@ -1,6 +1,14 @@
-const { moderators } = require("../content.json");
+const checkModerator = async (octokit, payload) => {
+  // get moderators list
+  const moderators = await octokit.rest.repos
+    .getContent({
+      owner: payload.repository.owner.login,
+      repo: payload.repository.name,
+      path: ".github/moderators.md",
+    })
+    .then((res) => Buffer.from(res, "base64").toString())
+    .catch((err) => console.err(err));
 
-const checkModerator = async (payload) => {
   let moderatorUsername = payload.issue.user.login;
   let moderatorList = moderators.split("\n");
 
@@ -15,4 +23,4 @@ const checkModerator = async (payload) => {
   return list.includes(moderatorUsername);
 };
 
-checkModerator();
+module.exports = checkModerator;
