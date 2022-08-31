@@ -5,6 +5,7 @@ const {
   endReview,
   assignAlgorithm,
   assignChecklist,
+  updateReadme,
 } = require("./src/logic/index");
 
 const githubBot = async (id, name, octokit, payload) => {
@@ -60,8 +61,20 @@ const githubBot = async (id, name, octokit, payload) => {
         endReview(octokit, payload);
       }
     }
+
+    // when issue is closed, update the readme with the event
+    if (name === "issues" && payload.action === "closed") {
+      updateReadme(octokit, payload);
+    }
+  } else if (
+    name === "installation" &&
+    payload.action === "new_permissions_accepted"
+  ) {
+    console.info("Event added to the event table");
   } else {
-    console.info("Webhook not yet automated or not needed");
+    console.info(
+      `Webhook: ${name}.${payload.action} not yet automated or needed`
+    );
   }
 };
 

@@ -4,6 +4,7 @@ const help = require("./help");
 const welcome = require("./welcome");
 const assignAlgorithm = require("./assignAlgorithm");
 const assignChecklist = require("./assignChecklist");
+const updateReadme = require("./updateReadme");
 
 module.exports = {
   welcome,
@@ -12,4 +13,5 @@ module.exports = {
   endReview,
   assignAlgorithm,
   assignChecklist,
+  updateReadme,
 };

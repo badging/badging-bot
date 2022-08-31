@@ -1,58 +1,52 @@
 const calculateBadge = require("./calculate.badge.js");
 
 const updateReadme = async (octokit, payload) => {
-  let resultsObj = await calculateBadge(octokit, payload);
+  let resultsObj = await calculateBadge(octokit, payload); // get badge name
+
+  // get date when issue was closed/when badge was assigned
   const getDate = () => {
     let date = new Date(payload.issue.closed_at);
-    date.setMonth(date.getMonth()); //January is 0!
-    let day = date.getDate();
-    if (day < 10) {
-      day = "0" + day;
-    }
 
-    date =
-      date.toLocaleString("en-US", { month: "short" }) +
-      "-" +
-      day +
-      "-" +
-      date.getFullYear();
-    return date;
+    let day = date.getDate();
+    day < 10 ? (day = "0" + day) : day;
+    date.setMonth(date.getMonth()); //January is 0!
+    let month = date.toLocaleString("en-US", { month: "short" });
+    let year = date.getFullYear();
+
+    return `${month}-${day}-${year}`;
   };
+
+  // get event
   const eventName = payload.issue.title.replace(/\[(.*?)\] /gi, "");
-  const eventLink =
-    "[" +
-    eventName +
-    "](" +
-    payload.issue.body
-      .slice(
-        payload.issue.body.indexOf("- Link to the Event Website: "),
-        payload.issue.body.indexOf("- Are you an organizer ") - 2
-      )
-      .replace("- Link to the Event Website: ", "") +
-    ")";
-  const badge = "![" + resultsObj.assignedBadge + "]";
+  const eventLink = payload.issue.body
+    .slice(
+      payload.issue.body.indexOf("- Link to the Event Website: "),
+      payload.issue.body.indexOf("- Are you an organizer ") - 2
+    )
+    .replace("- Link to the Event Website: ", "");
+  const event = `[${eventName}](${eventLink})`;
+
+  // get badge name
+  const badge = `![${resultsObj.assignedBadge}]`;
+
+  // get array of assignees
   const reviewers = payload.issue.assignees.map((assignee) => {
     return assignee.login;
   });
-  const issueLink = payload.issue.html_url;
+
+  const issueLink = payload.issue.html_url; // link to issue
 
   // string to help locate where to add event in README file
   const string =
     "Date        | Event name                                       | Badge              |Reviewers  |Application Issue link                                            |\n------------|-------------------------------------------------------------|---------|---------|-------------------------------------------------------------------|";
 
-  const newEvent =
-    getDate() +
-    "|" +
-    eventLink +
-    "|" +
-    badge +
-    "|" +
-    reviewers.map((reviewer) => {
-      return "@" + reviewer + " ";
-    }) +
-    "|" +
-    issueLink;
+  const newEvent = `${getDate()} | ${event} | ${badge} | ${reviewers.map(
+    (reviewer) => {
+      return `@${reviewer}`;
+    }
+  )} | ${issueLink} |`; // event string
 
+  // get README file content and sha value
   const {
     data: { sha, content },
   } = await octokit.rest.repos.getContent({
