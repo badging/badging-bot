@@ -52,13 +52,13 @@ const calculateBadge = async (octokit, payload) => {
 
   const badgeAssigned =
     reviewResult < 40
-      ? ["pending", "D%26I-Pending-red"]
+      ? ["Pending", "D%26I-Pending-red"]
       : reviewResult < 60
-      ? ["passing", "D%26I-Passing-passing"]
+      ? ["Passing", "D%26I-Passing-passing"]
       : reviewResult < 80
-      ? ["silver", "D%26I-Silver-silver"]
+      ? ["Silver", "D%26I-Silver-silver"]
       : reviewResult <= 100
-      ? ["gold", "D%26I-Gold-yellow"]
+      ? ["Gold", "D%26I-Gold-yellow"]
       : ["pending", "D%26I-Pending-red"];
 
   const url =
@@ -83,6 +83,7 @@ const calculateBadge = async (octokit, payload) => {
     htmlBadgeImage: htmlBadgeImage,
     reviewResult: reviewResult,
     reviewerCount: reviewerCount,
+    assignedBadge: badgeAssigned[0],
   };
 
   return messageObj;

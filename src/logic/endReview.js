@@ -1,5 +1,6 @@
 const calculateBadge = require("./calculate.badge.js");
 const checkModerator = require("./checkModerator.js");
+const updateReadme = require("./updateReadme.js");
 
 const endReview = async (octokit, payload) => {
   let resultsObj = await calculateBadge(octokit, payload);
@@ -47,6 +48,9 @@ const endReview = async (octokit, payload) => {
       state: "closed",
     });
   }
+
+  // update the readme with the event
+  updateReadme(octokit, payload);
 };
 
 module.exports = endReview;

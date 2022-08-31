@@ -1,7 +1,7 @@
 const {
   welcome,
   getResults,
-  // help,
+  // TODO: implement the help automation,
   endReview,
   assignAlgorithm,
   assignChecklist,
@@ -60,6 +60,8 @@ const githubBot = async (id, name, octokit, payload) => {
         endReview(octokit, payload);
       }
     }
+  } else {
+    console.info("Webhook not yet automated or not needed");
   }
 };
 
