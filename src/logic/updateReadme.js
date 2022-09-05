@@ -18,19 +18,34 @@ const updateReadme = async (octokit, payload) => {
 
   // get event
   const eventName = payload.issue.title.replace(/\[(.*?)\] /gi, "");
-  const eventLink = payload.issue.body
-    .slice(
-      payload.issue.body.indexOf("- Link to the Event Website: "),
-      payload.issue.body.indexOf("- Are you an organizer ") - 2
-    )
-    .replace("- Link to the Event Website: ", "");
+  let eventLink;
+  if (payload.issue.title.includes("[Virtual Event]")) {
+    eventLink = await payload.issue.body
+      .slice(
+        payload.issue.body.indexOf("- Link to the Event Website: "),
+        payload.issue.body.indexOf(
+          "- Provide verification that you are an event organizer: "
+        ) - 2
+      )
+      .replace("- Link to the Event Website: ", "");
+  }
+
+  if (payload.issue.title.includes("[In-Person Event]")) {
+    eventLink = await payload.issue.body
+      .slice(
+        payload.issue.body.indexOf("- Link to the Event Website: "),
+        payload.issue.body.indexOf("- Are you an organizer ") - 2
+      )
+      .replace("- Link to the Event Website: ", "");
+  }
+
   const event = `[${eventName}](${eventLink})`;
 
   // get badge name
   const badge = `![${resultsObj.assignedBadge}]`;
 
   // get array of assignees
-  const reviewers = payload.issue.assignees.map((assignee) => {
+  const reviewers = await payload.issue.assignees.map((assignee) => {
     return assignee.login;
   });
 
@@ -38,13 +53,13 @@ const updateReadme = async (octokit, payload) => {
 
   // string to help locate where to add event in README file
   const string =
-    "Date        | Event name                                       | Badge              |Reviewers  |Application Issue link                                            |\n------------|-------------------------------------------------------------|---------|---------|-------------------------------------------------------------------|";
+    "------------|-------------------------------------------------------------|---------|---------|-------------------------------------------------------------------|";
 
   const newEvent = `${getDate()} | ${event} | ${badge} | ${reviewers.map(
     (reviewer) => {
       return `@${reviewer}`;
     }
-  )} | ${issueLink} |`; // event string
+  )} | ${issueLink} `; // event string
 
   // get README file content and sha value
   const {
@@ -62,7 +77,7 @@ const updateReadme = async (octokit, payload) => {
     readme.slice(0, readme.indexOf(string) + string.length) +
     "\n" +
     newEvent +
-    readme.slice(readme.indexOf(string) + string.length - 1);
+    readme.slice(readme.indexOf(string) + string.length);
 
   await octokit.rest.repos
     .createOrUpdateFileContents({
