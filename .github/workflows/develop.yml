@@ -7,7 +7,7 @@ on:
 
 jobs:
   push_to_registry:
-    name: Push Docker image to Docker Hub
+    name: Push Develop Branch to Docker Hub
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -33,10 +33,10 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           secrets: |
-            "clientId=${{ secrets.CLIENTID }}"
-            "appId=${{ secrets.APPID }}"
-            "clientSecret=${{ secrets.CLIENTSECRET }}"
-            "webhookSecret=${{ secrets.WEBHOOKSECRET }}"
-            "PORT=${{ secrets.PORT }}"
-            "privateKey=${{ secrets.PRIVATEKEY }}"
-            "webhookURL=${{ secrets.BETA_URL }}"
+            clientId=${{ secrets.CLIENTID }}
+            appId=${{ secrets.APPID }}
+            clientSecret=${{ secrets.CLIENTSECRET }}
+            webhookSecret=${{ secrets.WEBHOOKSECRET }}
+            PORT=${{ secrets.PORT }}
+            privateKey=${{ secrets.PRIVATEKEY }}
+            webhookURL=${{ secrets.BETA_URL }}
