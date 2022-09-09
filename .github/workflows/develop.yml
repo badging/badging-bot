@@ -26,4 +26,3 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: badging-bot-beta:latest
