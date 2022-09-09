@@ -39,4 +39,4 @@ jobs:
             webhookSecret=${{ secrets.WEBHOOKSECRET }}
             PORT=${{ secrets.PORT }}
             webhookURL=${{ secrets.BETA_URL }}
-            privateKey="${{ secrets.PRIVATEKEY }}"
+            "privateKey="${{ secrets.PRIVATEKEY }}""
