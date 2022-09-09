@@ -34,3 +34,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           secrets: |
             clientId=${{ secrets.CLIENTID }}
+            appId=${{ secrets.APPID }}
+            clientSecret=${{ secrets.CLIENTSECRET }}
+            webhookSecret=${{ secrets.WEBHOOKSECRET }}
+            PORT=${{ secrets.PORT }}
+            webhookURL=${{ secrets.BETA_URL }}
