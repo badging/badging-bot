@@ -38,5 +38,5 @@ jobs:
             clientSecret=${{ secrets.CLIENTSECRET }}
             webhookSecret=${{ secrets.WEBHOOKSECRET }}
             PORT=${{ secrets.PORT }}
-            privateKey=${{ secrets.PRIVATEKEY }}
+            "privateKey=${{ secrets.PRIVATEKEY }}"
             webhookURL=${{ secrets.BETA_URL }}
