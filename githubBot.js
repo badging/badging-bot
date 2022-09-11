@@ -29,10 +29,18 @@ const githubBot = async (id, name, octokit, payload) => {
     //TODO: Implement to 24hours lapse
     //TODO: check whether editor is assignee
     //TODO: Implement the toggle button for Yes and No to avoid double checks
+
+    /**
+     * get list of assignees to check then against who has edited the options
+     */
+    const assignees = payload.issue.assignees
+      .map((assignee) => assignee.login)
+      .join(", ");
+
     if (
       name === "issue_comment" &&
       payload.action === "edited" &&
-      payload.issue.assignee.login === payload.sender.login
+      assignees.includes(payload.sender.login) // check if editor is assignee
     ) {
       if (payload.comment.body.match(/- \[x\] Yes/g)) {
         assignChecklist(octokit, payload); // assign checklist

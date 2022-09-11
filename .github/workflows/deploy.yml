@@ -15,7 +15,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x]
+        node-version: [16.x]
 
     steps:
       - name: Checkout the repo
@@ -26,8 +26,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npx -y husky-init && npm ci
-      - run: npm run build --if-present
-      - run: npm test --if-present
 
       - name: Build container image
         run: docker build -t $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7) .
