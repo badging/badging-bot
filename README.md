@@ -8,6 +8,14 @@ The `@badging-bot,` is a GitHub App that helps to coordinate the workflow of the
 
 The badging-bot is built around the Journal of Open Source Software [peer review system](https://joss.readthedocs.io/en/latest/) and is used to facilitate the application process for earning DEI event badges.
 
+## setting up local development environment
+
+Seeting up the bot is as easy as navigating to your project folder in the terminal and running;
+
+```sh
+source <(curl -s https://raw.githubusercontent.com/badging/bot-scripts/main/install.sh)
+```
+
 ### Functions
 
 The badging-bot is specifically intended to:
