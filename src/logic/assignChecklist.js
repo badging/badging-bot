@@ -176,10 +176,10 @@ const assignChecklist = async (octokit, payload) => {
 
   // create issue comment with newChecklist
   await octokit.rest.issues
-    .updateComment({
+    .createComment({
       owner: payload.repository.owner.login,
       repo: payload.repository.name,
-      comment_id: payload.comment.id,
+      issue_number: payload.issue.number,
       body: heading + "\n" + reviewerMessage,
     })
     .then((res) => console.log(res.status))
