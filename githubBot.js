@@ -43,8 +43,27 @@ const githubBot = async (id, name, octokit, payload) => {
       assignees.includes(payload.sender.login) // check if editor is assignee
     ) {
       if (payload.comment.body.match(/- \[x\] Yes/g)) {
+        // delete the comment so that it gets no other interaction
+        await octokit.rest.issues
+          .deleteComment({
+            owner: payload.repository.owner.login,
+            repo: payload.repository.name,
+            comment_id: payload.comment.id,
+          })
+          .then((res) => console.info(res.status))
+          .catch((err) => console.error(err));
+
         assignChecklist(octokit, payload); // assign checklist
       } else if (payload.comment.body.match(/- \[x\] No/g)) {
+        await octokit.rest.issues
+          .deleteComment({
+            owner: payload.repository.owner.login,
+            repo: payload.repository.name,
+            comment_id: payload.comment.id,
+          })
+          .then((res) => console.info(res.status))
+          .catch((err) => console.error(err));
+
         await octokit.rest.issues
           .removeAssignees({
             owner: payload.repository.owner.login,
