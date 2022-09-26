@@ -57,7 +57,7 @@ const updateReadme = async (octokit, payload) => {
 
   const newEvent = `${getDate()} | ${event} | ${badge} | ${reviewers.map(
     (reviewer) => {
-      return `@${reviewer}`;
+      return ` [@${reviewer}](https://github.com/${reviewer})`;
     }
   )} | ${issueLink} `; // event string
 
