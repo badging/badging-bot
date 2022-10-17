@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 const assignChecklist = async (octokit, payload) => {
   // get the checklist
   let newChecklist;
@@ -200,3 +202,5 @@ const assignChecklist = async (octokit, payload) => {
 };
 
 module.exports = assignChecklist;
+
+
