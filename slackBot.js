@@ -5,22 +5,15 @@ const { App } = require('@slack/bolt');
 const app = new App({
     signingSecret: process.env.slackSigningSecret,
     token: process.env.slackOAuthToken,
+    socketMode: true,
+    appToken: process.env.slackBoltToken,
+    port: process.env.SLACK_PORT
 });
-
-/* Add functionality here */
 
 (async () => {
     // Start the app
     await app.start(process.env.SLACK_PORT);
-
-    console.log('⚡️ Bolt app is running!');
+    console.log(`⚡️ Slack Bot is running on ${process.env.SLACK_PORT}!`);
 })();
 
-const slackproxy = new SmeeClient({
-    source: process.env.slackWebhookURL,
-    target: `http://localhost:${process.env.SLACK_PORT}`,
-    logger: console,
-});
-slackproxy.start();
-
-
+module.exports = app;
