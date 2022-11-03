@@ -1,6 +1,6 @@
 # Badging-bot
 
-[![CI](https://github.com/badging/badging-bot/actions/workflows/actions.yml/badge.svg)](https://github.com/badging/badging-bot/actions/workflows/actions.yml)
+[![CI](https://github.com/badging/badging-bot/actions/workflows/deploy.yml/badge.svg)](https://github.com/badging/badging-bot/actions/workflows/deploy.yml)
 
 #
 
