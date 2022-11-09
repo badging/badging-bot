@@ -5,6 +5,7 @@ const welcome = require("./welcome");
 const assignAlgorithm = require("./assignAlgorithm");
 const assignChecklist = require("./assignChecklist");
 const updateReadme = require("./updateReadme");
+const pingAdmin = require("./pingAdmin");
 
 module.exports = {
   welcome,
@@ -14,4 +15,5 @@ module.exports = {
   assignAlgorithm,
   assignChecklist,
   updateReadme,
+  pingAdmin,
 };

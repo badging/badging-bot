@@ -6,9 +6,10 @@ const {
   assignAlgorithm,
   assignChecklist,
   updateReadme,
+  pingAdmin,
 } = require("./src/logic/index");
 
-const githubBot = async (id, name, octokit, payload) => {
+const githubBot = async (id, name, octokit, payload, slackBot) => {
   // perform actions on application issues only
   if (
     payload.issue.title.includes("[Virtual Event]") ||
@@ -21,7 +22,7 @@ const githubBot = async (id, name, octokit, payload) => {
 
     // when issue is assigned, triger the assign algorithm
     if (name === "issues" && payload.action === "assigned") {
-      assignAlgorithm(id, name, octokit, payload);
+      assignAlgorithm(id, name, octokit, payload, slackBot);
     }
 
     // when assignee picks an option
@@ -81,6 +82,11 @@ const githubBot = async (id, name, octokit, payload) => {
       // get results
       if (payload.comment.body.match("/result")) {
         getResults(octokit, payload);
+      }
+
+      // notify mantainer when review is finished
+      if (payload.comment.body.match("/done")) {
+        pingAdmin(octokit, payload, slackBot);
       }
 
       // end review

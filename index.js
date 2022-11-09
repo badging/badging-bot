@@ -1,6 +1,7 @@
 const { App, createNodeMiddleware } = require("octokit");
 require("dotenv").config();
 const githubBot = require("./githubBot");
+const slackBot = require("./slackBot")
 // const initDB = require("./src/database/initDB");
 const SmeeClient = require("smee-client");
 // const test = require("./test");
@@ -22,7 +23,7 @@ const app = new App({
  */
 app.webhooks.onAny(async ({ id, name, payload }) => {
   const octokit = await app.getInstallationOctokit(payload.installation.id);
-  githubBot(id, name, octokit, payload);
+  githubBot(id, name, octokit, payload, slackBot);
   // initDB(id, name, octokit, payload);
   // test(id, name, octokit, payload);
 });
@@ -33,7 +34,6 @@ require("http")
   .listen(process.env.PORT, () =>
     console.info(`App listening on PORT:${process.env.PORT}`)
   );
-module.exports = app;
 
 //connect local server to network client in development
 const smee = new SmeeClient({
