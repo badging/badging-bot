@@ -18,5 +18,3 @@ const pingAdmin = async (octokit, payload, slackBot) => {
 
 
 module.exports = pingAdmin;
-
-

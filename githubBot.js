@@ -22,7 +22,7 @@ const githubBot = async (id, name, octokit, payload, slackBot) => {
 
     // when issue is assigned, triger the assign algorithm
     if (name === "issues" && payload.action === "assigned") {
-      assignAlgorithm(id, name, octokit, payload);
+      assignAlgorithm(id, name, octokit, payload, slackBot);
     }
 
     // when assignee picks an option

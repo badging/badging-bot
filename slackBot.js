@@ -1,4 +1,3 @@
-const SmeeClient = require("smee-client")
 require("dotenv").config();
 const { App } = require('@slack/bolt');
 

@@ -67,6 +67,10 @@ jobs:
             -e PORT=${{secrets.PORT}} \
             -e privateKey=${{secrets.PRIVATEKEY}} \
             -e webhookURL=${{ secrets.WEBHOOKURL }} \
+            -e slackSigningSecret=${{ secrets.SLACKSIGNINGSECRET }} \
+            -e slackBoltToken=${{ secrets.SLACKBOLTTOKEN }} \
+            -e slackOAuthToken=${{ secrets.SLACKOAUTHTOKEN }} \
+            -e SLACK_PORT=${{ secrets.SLACK_PORT }} \
             --restart always \
             --name $(echo $IMAGE_NAME) \
             $(echo $REGISTRY)/$(echo $IMAGE_NAME):$(echo $GITHUB_SHA | head -c7)
