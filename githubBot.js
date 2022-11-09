@@ -17,7 +17,7 @@ const githubBot = async (id, name, octokit, payload, slackBot) => {
   ) {
     // when applicant issue is open, welcome the applicant
     if (name === "issues" && payload.action === "opened") {
-      welcome(octokit, payload);
+      welcome(octokit, payload, slackBot);
     }
 
     // when issue is assigned, triger the assign algorithm
@@ -41,7 +41,7 @@ const githubBot = async (id, name, octokit, payload, slackBot) => {
     if (
       name === "issue_comment" &&
       payload.action === "edited" &&
-      assignees.includes(payload.sender.login) // check if editor is assignee
+      payload.comment.body.includes(payload.sender.login) // check if editor is assignee
     ) {
       if (payload.comment.body.match(/- \[x\] Yes/g)) {
         // delete the comment so that it gets no other interaction
@@ -70,7 +70,7 @@ const githubBot = async (id, name, octokit, payload, slackBot) => {
             owner: payload.repository.owner.login,
             repo: payload.repository.name,
             issue_number: payload.issue.number,
-            assignees: [payload.issue.assignee.login],
+            assignees: [payload.sender.login],
           })
           .then((res) => console.info(res.status))
           .catch((err) => console.error(err));

@@ -21,7 +21,7 @@
     "start": "concurrently \"npm run github-prod\" \"npm run slack-prod\"",
     "prepare": "husky install",
     "test": "npm run format && mocha",
-    "dev": "concurrently \"npm run github-server\" \"npm run slack-server\""
+    "dev": "concurrently \"npm run github-dev\" \"npm run slack-dev\""
   },
   "dependencies": {
     "@slack/bolt": "3.12.1",
