@@ -40,9 +40,8 @@ const githubBot = async (id, name, octokit, payload, slackBot) => {
 
     if (
       name === "issue_comment" &&
-      payload.action === "edited"
-      // &&
-      // payload.comment.body.includes(payload.sender.login) // check if editor is assignee
+      payload.action === "edited" &&
+      payload.comment.body.includes(payload.sender.login) // check if editor is assignee
     ) {
       if (payload.comment.body.match(/- \[x\] Yes/g)) {
         // delete the comment so that it gets no other interaction
