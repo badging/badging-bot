@@ -170,7 +170,7 @@ const assignChecklist = async (octokit, payload) => {
   ).toString();
 
   // heading for the checklist
-  const heading = `# Checklist for @${payload.sender.login}`;
+  // const heading = `# Checklist for @${payload.sender.login}`;
 
   // combine all the strings to make one body
   let reviewerMessage =
@@ -182,7 +182,17 @@ const assignChecklist = async (octokit, payload) => {
       owner: payload.repository.owner.login,
       repo: payload.repository.name,
       issue_number: payload.issue.number,
-      body: heading + "\n" + reviewerMessage,
+      body: "# Checklist for @J-ell" + "\n" + reviewerMessage,
+    })
+    .then((res) => console.log(res.status))
+    .catch((err) => console.error(err));
+
+    await octokit.rest.issues
+    .createComment({
+      owner: payload.repository.owner.login,
+      repo: payload.repository.name,
+      issue_number: payload.issue.number,
+      body: "# Checklist for @Joynels-Ogbogu" + "\n" + reviewerMessage,
     })
     .then((res) => console.log(res.status))
     .catch((err) => console.error(err));
