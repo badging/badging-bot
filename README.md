@@ -20,12 +20,14 @@ source <(curl -s https://raw.githubusercontent.com/badging/bot-scripts/main/inst
 
 The badging-bot is specifically intended to:
 
+- Notify maintaineres about new applications
 - Guide applicants/reviewers
 - Assign reviewers for a submission
 - Open checklists for reviewers according to the type of event
 - Check current badge status
 - Generate the final badge link
 - Close an application issue when an application is finalized
+- Update events table with reviewed events
 
 ## Tasks
 
@@ -33,6 +35,7 @@ The badging bot can be used for a specific set of tasks:
 
 - When a new submission is created. Once the issue of a new submission is successfully initiated, `@badging-bot` will do three things:
   - greet the applicant and provide guiding information \([see example](https://github.com/badging/event-diversity-and-inclusion/issues/46#issuecomment-674938374)\)
+  - Inform maintainer about new issue via slack using the integration
   - assign reviewers (In progress!)
   - open a checklist for each assigned reviewer \([see example](https://github.com/badging/event-diversity-and-inclusion/issues/46#issuecomment-674938396)\)
 - When a command is typed in a review issue comment.

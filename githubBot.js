@@ -103,7 +103,7 @@ const githubBot = async (id, name, octokit, payload, slackBot) => {
     name === "installation" &&
     payload.action === "new_permissions_accepted"
   ) {
-    console.info("Event added to the event table");
+    console.info("New permissions accepted");
   } else {
     console.info(
       `Webhook: ${name}.${payload.action} not yet automated or needed`
