@@ -12,8 +12,7 @@ const {
 const githubBot = async (id, name, octokit, payload, slackBot) => {
   // perform actions on application issues only
   if (
-    payload.issue.title.includes("[Virtual Event]") ||
-    payload.issue.title.includes("[In-Person Event]")
+    payload.issue.title.match(/event/i)
   ) {
     // when applicant issue is open, welcome the applicant
     if (name === "issues" && payload.action === "opened") {
