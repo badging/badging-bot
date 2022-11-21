@@ -170,11 +170,11 @@ const assignChecklist = async (octokit, payload) => {
   ).toString();
 
   // heading for the checklist
-  const heading = `# Checklist for @${payload.sender.login}`;
+  const heading = `# Checklist for @${payload.assignee.login}`;
 
   // combine all the strings to make one body
   let reviewerMessage =
-    "@" + payload.sender.login + " " + reviewerWelcome + newChecklist;
+    "@" + payload.assignee.login + " " + reviewerWelcome + newChecklist;
 
   // create issue comment with newChecklist
   await octokit.rest.issues
@@ -186,7 +186,6 @@ const assignChecklist = async (octokit, payload) => {
     })
     .then((res) => console.log(res.status))
     .catch((err) => console.error(err));
-
 
   // assign label if assignees are two
   if (payload.issue.assignees.length == 2) {
@@ -203,5 +202,3 @@ const assignChecklist = async (octokit, payload) => {
 };
 
 module.exports = assignChecklist;
-
-
