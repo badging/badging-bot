@@ -21,7 +21,7 @@ source <(curl -s https://raw.githubusercontent.com/badging/bot-scripts/main/inst
 The badging-bot is specifically intended to:
 
 - Notify maintaineres about new applications
-- Guide applicants/reviewers
+- Guide applicants/reviewers in the review process
 - Assign reviewers for a submission
 - Open checklists for reviewers according to the type of event
 - Check current badge status
