@@ -42,7 +42,7 @@ const githubBot = async (name, octokit, payload) => {
     payload.action === "new_permissions_accepted"
   ) {
     console.info("New permissions accepted");
-  } else {
+  } else if (name === "*"){
     console.info(
       `Webhook: ${name}.${payload.action} not yet automated or needed`
     );

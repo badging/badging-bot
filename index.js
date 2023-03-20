@@ -1,7 +1,6 @@
 const { App, createNodeMiddleware } = require("octokit");
 require("dotenv").config();
 const githubBot = require("./githubBot");
-const SmeeClient = require("smee-client");
 
 // instantiate Github App
 const app = new App({
@@ -31,10 +30,3 @@ require("http")
     console.info(`App listening on PORT:${process.env.PORT}`)
   );
 
-//connect local server to network client in development
-const smee = new SmeeClient({
-  source: process.env.webhookURL,
-  target: `http://localhost:${process.env.PORT}/api/github/webhooks`,
-  logger: console,
-});
-smee.start();
