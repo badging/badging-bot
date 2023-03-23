@@ -5,7 +5,7 @@ const {
   endReview,
   assignChecklist,
   updateReadme,
-} = require("./src/logic/index");
+} = require("./src/index");
 
 const githubBot = async (name, octokit, payload) => {
   // perform actions on application issues only

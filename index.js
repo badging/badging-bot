@@ -1,9 +1,13 @@
-const { App, createNodeMiddleware } = require("octokit");
+const { App } = require("octokit");
 require("dotenv").config();
 const githubBot = require("./githubBot");
+const express = require("express");
+
+const app = express();
+app.use(express.json());
 
 // instantiate Github App
-const app = new App({
+const bot = new App({
   appId: process.env.appId,
   privateKey: process.env.privateKey,
   oauth: {
@@ -13,20 +17,14 @@ const app = new App({
   webhooks: { secret: process.env.webhookSecret },
 });
 
-/**
- * Trigger the bot commands and the database initialization
- * this works for routing too -> for the webhooks POST requests
- */
-app.webhooks.onAny(async ({ id, name, payload }) => {
-  await payload;
-  const octokit = await app.getInstallationOctokit(payload.installation.id);
+app.post('/', async (req, res) => {
+  const { headers: { 'x-github-event': name }, body: payload } = req;
+  const octokit = await bot.getInstallationOctokit(payload.installation.id);
   githubBot(name, octokit, payload);
+  res.send('ok');
 });
 
-// create local server to receive webhooks
-require("http")
-  .createServer(createNodeMiddleware(app))
-  .listen(process.env.PORT, () =>
-    console.info(`App listening on PORT:${process.env.PORT}`)
-  );
+app.listen(process.env.PORT, () =>
+  console.info(`App listening on PORT:${process.env.PORT}`)
+);
 

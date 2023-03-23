@@ -1,8 +1,0 @@
-version: "3"
-services:
-  web:
-    image: docker-test
-    ports:
-      - "5050:5050"
-    environment:
-      NODE_ENV: production
