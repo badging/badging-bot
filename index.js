@@ -1,10 +1,16 @@
-const { App, createNodeMiddleware } = require("octokit");
+const { App } = require("octokit");
 require("dotenv").config();
 const githubBot = require("./githubBot");
-const SmeeClient = require("smee-client");
+const express = require("express");
+const logger = require('./utils/logger');
+const path = require("path");
+const fs = require("fs");
+
+const app = express();
+app.use(express.json());
 
 // instantiate Github App
-const app = new App({
+const bot = new App({
   appId: process.env.appId,
   privateKey: process.env.privateKey,
   oauth: {
@@ -14,27 +20,48 @@ const app = new App({
   webhooks: { secret: process.env.webhookSecret },
 });
 
-/**
- * Trigger the bot commands and the database initialization
- * this works for routing too -> for the webhooks POST requests
- */
-app.webhooks.onAny(async ({ id, name, payload }) => {
-  await payload;
-  const octokit = await app.getInstallationOctokit(payload.installation.id);
+// Middleware function to log response details
+app.use((req, res, next) => {
+    const oldSend = res.send;
+    res.send = function (data) {
+      logger.info(`Response for ${req.method} ${req.url}:`);
+      logger.info(data);
+      oldSend.apply(res, arguments);
+    };
+    next();
+  });
+
+app.post('/', async (req, res) => {
+  const { headers: { 'x-github-event': name }, body: payload } = req;
+  const octokit = await bot.getInstallationOctokit(payload.installation.id);
   githubBot(name, octokit, payload);
+  logger.info(`Received ${name} event from Github`);
+  res.send('ok');
 });
 
-// create local server to receive webhooks
-require("http")
-  .createServer(createNodeMiddleware(app))
-  .listen(process.env.PORT, () =>
-    console.info(`App listening on PORT:${process.env.PORT}`)
-  );
-
-//connect local server to network client in development
-const smee = new SmeeClient({
-  source: process.env.webhookURL,
-  target: `http://localhost:${process.env.PORT}/api/github/webhooks`,
-  logger: console,
+app.get('/logs', (req, res) => {
+  const logsDir = path.join(__dirname, 'logs');
+  fs.readdir(logsDir, (err, files) => {
+    if (err) {
+      logger.error(err);
+      return res.status(500).send('Error reading logs directory');
+    }
+    const logFiles = files.filter(file => file.startsWith('app.log'));
+    if (logFiles.length === 0) {
+      return res.status(404).send('No log files found');
+    }
+    const logFile = path.join(logsDir, logFiles[0]);
+    fs.readFile(logFile, 'utf8', (err, data) => {
+      if (err) {
+        logger.error(err);
+        return res.status(500).send('Error reading log file');
+      }
+      res.send(`<pre>${data}</pre>`);
+    });
+  });
 });
-smee.start();
+
+
+app.listen(process.env.PORT, () =>
+  logger.info(`App listening on PORT:${process.env.PORT}`)
+);

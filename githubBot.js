@@ -5,7 +5,7 @@ const {
   endReview,
   assignChecklist,
   updateReadme,
-} = require("./src/logic/index");
+} = require("./src/index");
 
 const githubBot = async (name, octokit, payload) => {
   // perform actions on application issues only
@@ -42,7 +42,7 @@ const githubBot = async (name, octokit, payload) => {
     payload.action === "new_permissions_accepted"
   ) {
     console.info("New permissions accepted");
-  } else {
+  } else if (name === "*"){
     console.info(
       `Webhook: ${name}.${payload.action} not yet automated or needed`
     );
