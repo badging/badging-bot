@@ -57,9 +57,9 @@ jobs:
       - name: Stop and remove existing images with the same name on the droplet
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.DROPLET_IP_ADDRESS }}
-          username: ${{ secrets.SSHUSERNAME }}
-          password: ${{ secrets.SSHPASSWORD }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
           script: |
             if docker inspect ${{ env.IMAGE_NAME }} >/dev/null 2>&1; then
               docker stop ${{ env.IMAGE_NAME }}
@@ -68,15 +68,15 @@ jobs:
       - name: Deploy Docker image to DigitalOcean Droplet
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.DROPLET_IP_ADDRESS }}
-          username: ${{ secrets.SSHUSERNAME }}
-          password: ${{ secrets.SSHPASSWORD }}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
           script: |
             docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
             echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
             docker run -d \
             -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
-            --env-file /home/${{ secrets.SSHUSERNAME }}/.env \
+            --env-file /home/${{ secrets.USERNAME }}/.env \
             --restart=always \
             --name ${{ env.IMAGE_NAME }} \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
