@@ -1,0 +1,82 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - "*"
+  pull_request:
+
+env:
+  REGISTRY: "registry.digitalocean.com/event-badging-bot"
+  IMAGE_NAME: "badging"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - name: Lint code
+        run: npm run format
+
+  docker-build:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to DigitalOcean registry
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Log in to DigitalOcean Container Registry with short-lived credentials
+        run: doctl registry login --expiry-seconds 600
+      - name: Delete existing images with similar name
+        run: |
+          doctl registry repository list-tags $REGISTRY/$IMAGE_NAME --format Name --no-header |
+          while read -r image_tag; do
+            doctl registry image delete $REGISTRY/$IMAGE_NAME:$image_tag;
+          done
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+  deploy:
+    needs: docker-build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Login to DigitalOcean registry
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Stop and remove existing images with the same name on the droplet
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.DROPLET_IP_ADDRESS }}
+          username: ${{ secrets.SSHUSERNAME }}
+          password: ${{ secrets.SSHPASSWORD }}
+          script: |
+            if docker inspect ${{ env.IMAGE_NAME }} >/dev/null 2>&1; then
+              docker stop ${{ env.IMAGE_NAME }}
+              docker rm ${{ env.IMAGE_NAME }}
+            fi
+      - name: Deploy Docker image to DigitalOcean Droplet
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.DROPLET_IP_ADDRESS }}
+          username: ${{ secrets.SSHUSERNAME }}
+          password: ${{ secrets.SSHPASSWORD }}
+          script: |
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            echo ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+            docker run -d \
+            -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
+            --env-file /home/${{ secrets.SSHUSERNAME }}/.env \
+            --restart=always \
+            --name ${{ env.IMAGE_NAME }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}

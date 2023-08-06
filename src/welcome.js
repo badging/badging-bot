@@ -16,7 +16,6 @@ const welcome = async (octokit, payload) => {
     })
     .then((res) => console.info(res.status))
     .catch((err) => console.error(err));
-
 };
 
 module.exports = welcome;

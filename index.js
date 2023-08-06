@@ -2,7 +2,7 @@ const { App } = require("octokit");
 require("dotenv").config();
 const githubBot = require("./githubBot");
 const express = require("express");
-const logger = require('./utils/logger');
+const logger = require("./utils/logger");
 const path = require("path");
 const fs = require("fs");
 
@@ -22,46 +22,58 @@ const bot = new App({
 
 // Middleware function to log response details
 app.use((req, res, next) => {
-    const oldSend = res.send;
-    res.send = function (data) {
-      logger.info(`Response for ${req.method} ${req.url}:`);
-      logger.info(data);
-      oldSend.apply(res, arguments);
-    };
-    next();
-  });
+  const oldSend = res.send;
+  res.send = function (data) {
+    logger.info(`Response for ${req.method} ${req.url}:`);
+    logger.info(data);
+    oldSend.apply(res, arguments);
+  };
+  next();
+});
 
-app.post('/', async (req, res) => {
-  const { headers: { 'x-github-event': name }, body: payload } = req;
+app.post("/", async (req, res) => {
+  const {
+    headers: { "x-github-event": name },
+    body: payload,
+  } = req;
   const octokit = await bot.getInstallationOctokit(payload.installation.id);
   githubBot(name, octokit, payload);
   logger.info(`Received ${name} event from Github`);
-  res.send('ok');
+  res.send("ok");
 });
 
-app.get('/logs', (req, res) => {
-  const logsDir = path.join(__dirname, 'logs');
+app.get("/logs", (req, res) => {
+  const logsDir = path.join(__dirname, "logs");
   fs.readdir(logsDir, (err, files) => {
     if (err) {
       logger.error(err);
-      return res.status(500).send('Error reading logs directory');
+      return res.status(500).send("Error reading logs directory");
     }
-    const logFiles = files.filter(file => file.startsWith('app.log'));
+    const logFiles = files.filter((file) => file.startsWith("app.log"));
     if (logFiles.length === 0) {
-      return res.status(404).send('No log files found');
+      return res.status(404).send("No log files found");
     }
     const logFile = path.join(logsDir, logFiles[0]);
-    fs.readFile(logFile, 'utf8', (err, data) => {
+    fs.readFile(logFile, "utf8", (err, data) => {
       if (err) {
         logger.error(err);
-        return res.status(500).send('Error reading log file');
+        return res.status(500).send("Error reading log file");
       }
       res.send(`<pre>${data}</pre>`);
     });
   });
 });
 
-
 app.listen(process.env.PORT, () =>
   logger.info(`App listening on PORT:${process.env.PORT}`)
 );
+
+const SmeeClient = require("smee-client");
+
+const smee = new SmeeClient({
+  source: "https://smee.io/badging",
+  target: "http://localhost:2020",
+  logger: console,
+});
+
+smee.start();
