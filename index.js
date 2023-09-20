@@ -71,8 +71,8 @@ app.listen(process.env.PORT, () =>
 const SmeeClient = require("smee-client");
 
 const smee = new SmeeClient({
-  source: "https://smee.io/badging",
-  target: "http://localhost:2020",
+  source: process.env.source,
+  target: `http://localhost:${process.env.PORT}`,
   logger: console,
 });
 
