@@ -65,10 +65,11 @@ app.get("/logs", (req, res) => {
 });
 
 app.listen(process.env.PORT, () =>
-  logger.info(`App listening on PORT:${process.env.PORT}`)
+logger.info(`App listening on PORT:${process.env.PORT}`)
 );
 
-const SmeeClient = require("smee-client");
+if (process.env.NODE_ENV === "development") {
+  const SmeeClient = require("smee-client");
 
 const smee = new SmeeClient({
   source: process.env.source,
@@ -77,3 +78,5 @@ const smee = new SmeeClient({
 });
 
 smee.start();
+}
+
