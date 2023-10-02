@@ -10,7 +10,7 @@ The badging-bot is built around the Journal of Open Source Software [peer review
 
 ## setting up local development environment
 
-Seeting up the bot is as easy as navigating to your project folder in the terminal and running;
+Setting up the bot is as easy as navigating to your project folder in the terminal and running;
 
 ```sh
 source <(curl -s https://raw.githubusercontent.com/badging/bot-scripts/main/install.sh)
@@ -20,7 +20,7 @@ source <(curl -s https://raw.githubusercontent.com/badging/bot-scripts/main/inst
 
 The badging-bot is specifically intended to:
 
-- Notify maintaineres about new applications
+- Notify maintainers about new applications
 - Guide applicants/reviewers in the review process
 - Assign reviewers for a submission
 - Open checklists for reviewers according to the type of event
@@ -51,7 +51,7 @@ In case of any bugs, issues and glitches, feel free to open up a GitHub Issue or
 
 The badging bot is a result of open source contributions. We don’t take any contribution for granted. We appreciate contributions to documentation, codebase and reviews.
 Our documentation is a section of the CHAOSS community handbook found [here](https://handbook.chaoss.community/community-handbook/badging/overview). For contributions to documentation, please submit a pull request to the [community handbook repository](https://www.google.com/url?sa=t&source=web&rct=j&url=https://github.com/chaoss/community-handbook&ved=2ahUKEwiBxqfM4rj2AhUDNn0KHUxMAdoQFnoECAMQAQ&usg=AOvVaw3VD3BYnkDUeeDtkYI0F4gD).
-To contribute code to the badging-bot codebase, please read our [contribution guidelines](https://handbook.chaoss.community/community-handbook/contributing/design) and submit a pull request to this repository.
+To contribute code to the badging-bot codebase, please read our [contribution guidelines](https://handbook.chaoss.community/community-handbook/contributing/development/contributing-worfkflow) and submit a pull request to this repository.
 
 ## Credits
 
