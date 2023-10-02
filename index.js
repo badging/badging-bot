@@ -73,7 +73,7 @@ if (process.env.NODE_ENV === "development") {
   const SmeeClient = require("smee-client");
 
 const smee = new SmeeClient({
-  source: process.env.source,
+  source: process.env.smee_URL,
   target: `http://localhost:${process.env.PORT}`,
   logger: console,
 });
