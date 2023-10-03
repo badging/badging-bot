@@ -121,21 +121,32 @@ webhookSecret=xxxxx
 PORT=xxxxx
 smee_URL=xxxxx
 ```
-20. Start the app on the development envrionment using the command below:
+
+20. If you are using Windows OS, the start command for the project uses `NODE_ENV` to set the environment for running the project to either ‘development’ or ‘production’, so you might get the error below error if you run the project.
+```js
+NODE_ENV is not recognized as an internal or external command, operable command or batch file.
+```
+
+To fix this, run the command below in a new terminal to install a node-env CLI globally on your machine:
+```js
+npm install -g win-node-env
+```
+
+21. Start the app on the development envrionment using the command below:
 ```js
 npm run dev
 ```
 This will start the app on the development environment and connect to smee.io webhook URL.
-<img width="400" src="Assets/run-badging-bot.png" alt="run-badging-bot" />
+<img width="600" src="Assets/run-badging-bot.png" alt="run-badging-bot" />
 
-21. To test, head over to the event-diversity-and-inclusion repository and create a new issue. You will see that the bot has added a comment to the issue. When the issue is assigned to anyone,the bot will send the checklist for the event and so on.
+22. To test, head over to the event-diversity-and-inclusion repository and create a new issue. You will see that the bot has added a comment to the issue. When the issue is assigned to anyone,the bot will send the checklist for the event and so on.
 <img width="600" src="Assets/event-example.png" alt="testing-bot" />
 
-22. You can also see the webhook events on the smee.io page using the URL provided in the .env file.
+23. You can also see the webhook events on the smee.io page using the URL provided in the .env file.
 <img width="600" src="Assets/smee-page.png" alt="sample-smee-page" />
 
-23. To start adding more functionalities or improving existing ones, the core functions are written in the src directory. You can see few examples like `assignChecklist.js`, `welcome.js`, `issueComment.js`, `checkModerator.js` etc where the bot comands and logic are written.
+24. To start adding more functionalities or improving existing ones, the core functions are written in the src directory. You can see few examples like `assignChecklist.js`, `welcome.js`, `issueComment.js`, `checkModerator.js` etc where the bot comands and logic are written.
 
-24. To add a new functionality/feature you created to the flow such that either a command or a condition met triggers the feature, you will extend the function in the `githubBot.js` file. There you can state the condition or event that triggers any feature and the function that will be triggered.
+25. To add a new functionality/feature you created to the flow such that either a command or a condition met triggers the feature, you will extend the function in the `githubBot.js` file. There you can state the condition or event that triggers any feature and the function that will be triggered.
 
-25. Make sure to follow the code style, naming convention and formating guidelines as it will help the code to be readable and understandable. You can find the contributing guidelines [here](https://github.com/badging/badging-bot/blob/main/CONTRIBUTING.md).
+26. Make sure to follow the code style, naming convention and formating guidelines as it will help the code to be readable and understandable. You can find the contributing guidelines [here](https://github.com/badging/badging-bot/blob/main/CONTRIBUTING.md).
