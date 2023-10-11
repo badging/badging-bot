@@ -1,53 +1,27 @@
-## Contributing
+# Tutorial
 
-[fork]: /fork
-[pr]: /compare
-[style]: https://standardjs.com/
-[code-of-conduct]: CODE_OF_CONDUCT.md
+This tutorial aims to guide you through the process of setting up the bot on your local development environment in case you are using an operating system not currently supported by the bot script. If you have a linux environment and would rather use the bot script, follow the guide in the [README.md](README.md) document instead.
 
-Hi there! We're thrilled that you'd like to contribute to this project. Your help is essential for keeping it great.
-
-Please note that this project is released with a [Contributor Code of Conduct][code-of-conduct]. By participating in this project you agree to abide by its terms.
-
-## Issues and PRs
-
-If you have suggestions for how this project could be improved, or want to report a bug, open an issue! We'd love all and any contributions. If you have questions, too, we'd love to hear them.
-
-We'd also love PRs. If you're thinking of a large PR, we advise opening up an issue first to talk about it, though! Look at the links below if you're not sure how to open a PR.
-
-## Setting up local development environment
-
-Setting up the bot is as easy as navigating to your project folder in the terminal and running;
-
-```sh
-source <(curl -s https://raw.githubusercontent.com/badging/bot-scripts/main/install.sh)
-```
-
-</br>
-</br>
-
-If you are using an operating system not currently supported by the bot script, follow this tutorial:
-
-### Tools needed
+## Tools needed
 
 - Node & NPM
 - A GitHub account
 - A [smee.io](https://smee.io/) webhook URL (to get this, head over to the website and click on 'Start a new channel'. A unique webhook url will be displayed. Save this for later).
 
-### Steps
+## Steps
 
-#### 1. Fork the Badging Bot repository
+### 1. Fork the Badging Bot repository
 <img align="right" width="300" src="Assets/fork_badging_bot_repo.PNG" alt="fork the Badging Bot repository" />
 
 Fork this repository by clicking on the fork button on the top of this page. This will create a copy of this repository in your account.
 
-#### 2. Fork the Event Diversity and Inclusion repository
+### 2. Fork the Event Diversity and Inclusion repository
 
 <img align="right" width="300" src="Assets/fork_DEI_badging_repo.PNG" alt="fork the Badging Bot repository" />
 
 Fork the event-diversity-and-inclusion [repository](https://github.com/badging/event-diversity-and-inclusion) by clicking on the fork button on the repository page. This is where the GitHub app will be installed to test the bot.
 
-#### 3. Clone the Badging Bot repository
+### 3. Clone the Badging Bot repository
 Clone the forked repository to your machine by opening the forked repository, click on the 'code' button and then click the _copy to clipboard_ icon.
 
 Open a terminal on your local computer and run the following git command:
@@ -57,7 +31,7 @@ git clone "url you just copied"
 
 ```
 
-### Create a branch
+## Create a branch
 
 Change to the repository directory on your computer (if you are not already there):
 
@@ -79,10 +53,10 @@ git switch -c add-my-bot-contributions
 
 ```
 
-### Create a .env file
+## Create a .env file
 Create a .env file following the example_env file provided in the folder. This will be used to store all the credentials needed for the bot to run.
 
-### Generate credentials
+## Generate credentials
 To generate your own credentials, you need to create your own GitHub App and configure it to run on the event-diversity-and-inclusion repository. To do this, follow this steps:
 
 1. Head over to your Github account.
@@ -175,19 +149,4 @@ This will start the app on the development environment and connect to smee.io we
 
 25. To add a new functionality/feature you created to the flow such that either a command or a condition met triggers the feature, you will extend the function in the `githubBot.js` file. There you can state the condition or event that triggers any feature and the function that will be triggered.
 
-
-Here are a few things you can do that will increase the likelihood of your pull request being accepted:
-
-- Follow the [style guide][style] which is using standard. Any linting errors should be shown when running `npm test`.
-- Write and update tests.
-- Keep your changes as focused as possible. If there are multiple changes you would like to make that are not dependent upon each other, consider submitting them as separate pull requests.
-- Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html).
-
-Work in Progress pull requests are also welcome to get feedback early on, or if there is something blocked you.
-
-## Resources
-
-- [How to Contribute to Open Source](https://opensource.guide/how-to-contribute/)
-- [Using Pull Requests](https://help.github.com/articles/about-pull-requests/)
-- [GitHub Help](https://help.github.com)
-```
+26. Make sure to follow the code style, naming convention and formating guidelines as it will help the code to be readable and understandable. You can find the contributing guidelines [here](https://github.com/badging/badging-bot/blob/main/CONTRIBUTING.md).
