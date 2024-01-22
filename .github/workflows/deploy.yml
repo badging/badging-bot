@@ -3,28 +3,29 @@ name: CI/CD
 on:
   push:
     branches:
-      - "*"
-  pull_request:
+      - "main"
 
 env:
   IMAGE_NAME: "event_badging"
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install dependencies
-        run: npm install
-      - name: Lint code
-        run: npm run format
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - uses: actions/checkout@v3
+      - name: Remove old Docker images
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          script: |
+            if docker inspect ${{ env.IMAGE_NAME }} >/dev/null 2>&1; then
+              docker stop ${{ env.IMAGE_NAME }}
+              docker rm ${{ env.IMAGE_NAME }}
+              docker images --filter "reference=${{ env.IMAGE_NAME }}*" -q | xargs docker rmi -f || true
+            fi
+
       - name: Build Docker image
         run: docker build -t ${{ env.IMAGE_NAME }}:${{ github.sha }} .
 
@@ -47,14 +48,11 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           script: |
-            if docker inspect ${{ env.IMAGE_NAME }} >/dev/null 2>&1; then
-              docker stop ${{ env.IMAGE_NAME }}
-              docker rm ${{ env.IMAGE_NAME }}
-            fi
             docker load -i ~/event_badging.tar
             docker run -d \
               -p ${{ secrets.PORT }}:${{ secrets.PORT }} \
               --env-file /home/${{ secrets.USERNAME }}/.env.badging_bot \
+              --network host \
               --restart=always \
               --name ${{ env.IMAGE_NAME }} \
               ${{ env.IMAGE_NAME }}:${{ github.sha }}
