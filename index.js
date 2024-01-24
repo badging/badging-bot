@@ -31,6 +31,26 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/status", (req, res) => {
+  try {
+    res.json({ message: "Event Badging Bot server up and running" });
+  } catch (error) {
+    console.error(error);
+
+    if (error.statusCode && error.statusCode !== 200) {
+      res.status(error.statusCode).json({
+        error: "Error",
+        message: "our bad, something is wrong with the server configuration",
+      });
+    } else {
+      res.status(500).json({
+        error: "Internal Server Error",
+        message: "An unexpected error occurred at our end",
+      });
+    }
+  }
+});
+
 app.post("/", async (req, res) => {
   const {
     headers: { "x-github-event": name },
